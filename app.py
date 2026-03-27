@@ -79,7 +79,12 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        return "Registration Successful 🎉"
+        # Auto-login after registration
+        session["user_id"] = new_user.id
+        session["user_email"] = new_user.email
+        session["user_role"] = new_user.role
+        
+        return redirect("/dashboard")
 
     return render_template("register.html")
 
