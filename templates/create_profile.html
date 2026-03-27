@@ -32,8 +32,15 @@
 
 <div class="mb-3">
 <label class="form-label">Profile Picture</label>
-<input type="file" name="profile_picture" class="form-control" accept="image/*">
+<input id="profile_picture" type="file" name="profile_picture" class="form-control" accept="image/*">
 <small class="form-text text-muted">Upload a profile picture (PNG, JPG, JPEG, GIF)</small>
+</div>
+
+<div class="mb-3" id="preview-container" style="display:none;">
+    <label class="form-label">Preview</label>
+    <div>
+        <img id="profile_picture_preview" src="#" alt="Profile Picture Preview" class="img-thumbnail" style="max-width: 220px; max-height: 220px;" />
+    </div>
 </div>
 
 <button type="submit" class="btn btn-primary">Save Profile</button>
@@ -44,7 +51,30 @@
 
 </div>
 
-</div>
+<script>
+    document.getElementById('profile_picture').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (!file) {
+            document.getElementById('preview-container').style.display = 'none';
+            return;
+        }
+
+        if (!file.type.startsWith('image/')) {
+            alert('Please upload a valid image file.');
+            document.getElementById('profile_picture').value = '';
+            document.getElementById('preview-container').style.display = 'none';
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('profile_picture_preview');
+            preview.src = e.target.result;
+            document.getElementById('preview-container').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    });
+</script>
 
 </body>
 </html>
