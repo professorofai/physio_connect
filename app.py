@@ -176,14 +176,16 @@ def physio_appointments():
      patient = User.query.get(appt.patient_id)
 
      data.append({
-        "name": patient.name,
-        "email": patient.email,
-        "date": appt.appointment_date
-    })
+    "id": appt.id,
+    "name": patient.name,
+    "email": patient.email,
+    "date": appt.appointment_date,
+    "status": appt.status
+})
 
     return render_template(
     "physio_appointments.html",
-    appointments = Appointment.query.all()
+    appointments = data
 )
 @app.route('/approve/<int:id>')
 def approve(id):
@@ -191,7 +193,7 @@ def approve(id):
     if appt:
         appt.status = "Approved"
         db.session.commit()
-    return redirect('/physio_dashboard')
+    return redirect('/physio_appointments')
 
 
 @app.route('/reject/<int:id>')
@@ -200,7 +202,7 @@ def reject(id):
     if appt:
         appt.status = "Rejected"
         db.session.commit()
-    return redirect('/physio_dashboard')
+    return redirect('/physio_appointments')
 
 # Logout route
 @app.route("/logout")
