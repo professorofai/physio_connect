@@ -1,22 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Patient Dashboard 🧑‍⚕️</h1>
-<p>Welcome {{ email }}</p>
+{% extends "base.html" %}
 
-<ul>
-    <li>Book Appointment</li>
-    <li>View Prescriptions</li>
-    <li>View Exercises</li>
-</ul>
-<a href="/physios" class="btn btn-primary">
-Browse Physiotherapists
-</a>
-<a href="/logout">Logout</a>
-</body>
-</html>
+{% block content %}
+    <h1>Patient Dashboard 🧑‍⚕️</h1>
+    <p>Welcome {{ email }}</p>
+
+    <ul>
+        <li>Book Appointment</li>
+        <li>View Prescriptions</li>
+        <li>View Exercises</li>
+    </ul>
+    <a href="/physios" class="btn btn-primary">Browse Physiotherapists</a>
+    <a href="/logout" class="btn btn-secondary">Logout</a>
+{% endblock %}

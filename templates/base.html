@@ -6,16 +6,23 @@
 <body>
 
     <!-- 🔥 NAVBAR -->
-    <div style="background:#eee; padding:10px;">
-        <a href="/">Home</a> |
-
-        {% if session.get("user_id") %}
-            <a href="/dashboard">Dashboard</a> |
-            <a href="/logout">Logout</a>
-        {% else %}
-            <a href="/login">Login</a> |
-            <a href="/register">Register</a>
-        {% endif %}
+    <div style="background:#eee; padding:10px; display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center;">
+            <a href="/" style="display:flex; align-items:center; text-decoration:none; color:#000; font-weight:bold; margin-right:20px;">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Physio Connect" style="width:32px; height:32px; margin-right:8px;" />
+                Physio Connect
+            </a>
+        </div>
+        <div>
+            <a href="/" style="margin-right:12px;">Home</a>
+            {% if session.get("user_id") %}
+                <a href="/dashboard" style="margin-right:12px;">Dashboard</a>
+                <a href="/logout" style="margin-right:12px;">Logout</a>
+            {% else %}
+                <a href="/login" style="margin-right:12px;">Login</a>
+                <a href="/register" style="margin-right:12px;">Register</a>
+            {% endif %}
+        </div>
     </div>
 
     <hr>

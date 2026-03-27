@@ -1,15 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Dashboard - Physio Connect</title>
-</head>
-<body>
+{% extends "base.html" %}
 
+{% block content %}
     <h1>Welcome {{ email }} 🎉</h1>
 
     <p>You are a <strong>{{ role }}</strong></p>
 
-    <a href="/logout">Logout</a>
-
-</body>
-</html>
+    <a href="/logout" class="btn btn-secondary">Logout</a>
+{% endblock %}
