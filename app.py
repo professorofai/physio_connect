@@ -5,8 +5,11 @@ sys.path.insert(0, '/Users/akshatjauhari/Desktop/Coding/PHYSIOTHERAPIST/physio_c
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
+
+import smtplib
+from email.message import EmailMessage
 
 app = Flask(__name__, instance_relative_config=True)
 app.secret_key = "supersecretkey"
@@ -19,6 +22,36 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 # Ensure upload directory exists
 import os
 os.makedirs(os.path.join(app.root_path, UPLOAD_FOLDER), exist_ok=True)
+
+# Email config (set these in environment variables)
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_FROM = os.environ.get('EMAIL_FROM', EMAIL_HOST_USER)
+
+
+def send_registration_email(to_email, username):
+    if not EMAIL_HOST_USER or not EMAIL_HOST_PASSWORD:
+        app.logger.warning('Email credentials not configured; skipping email send.')
+        return False
+
+    msg = EmailMessage()
+    msg['Subject'] = 'Your Physio Connect Registration is Complete'
+    msg['From'] = EMAIL_FROM
+    msg['To'] = to_email
+    msg.set_content(f"Dear {username},\n\nThank you for registering with Physio Connect! Your account is now active and you can access your dashboard at http://localhost:5000/dashboard\n\nBest regards,\nPhysio Connect Team")
+
+    try:
+        with smtplib.SMTP(EMAIL_HOST, EMAIL_PORT) as smtp:
+            smtp.starttls()
+            smtp.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
+            smtp.send_message(msg)
+        return True
+    except Exception as e:
+        app.logger.error(f"Failed to send registration email: {e}")
+        return False
+
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -79,11 +112,18 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
+        # Send confirmation email after successful registration
+        email_sent = send_registration_email(email, name)
+        if not email_sent:
+            flash('Registration successful, but confirmation email was not sent. Please check server logs.', 'warning')
+        else:
+            flash('Registration successful! Confirmation email has been sent.', 'success')
+
         # Auto-login after registration
         session["user_id"] = new_user.id
         session["user_email"] = new_user.email
         session["user_role"] = new_user.role
-        
+
         return redirect("/dashboard")
 
     return render_template("register.html")
