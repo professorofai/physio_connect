@@ -1,8 +1,13 @@
+#!/Users/akshatjauhari/Desktop/Coding/PHYSIOTHERAPIST/physio_connect/venv/bin/python3
+import sys
+import os
+sys.path.insert(0, '/Users/akshatjauhari/Desktop/Coding/PHYSIOTHERAPIST/physio_connect/venv/lib/python3.14/site-packages')
+
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, render_template, request, session, redirect
 from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
+app = Flask(__name__, instance_relative_config=True)
 app.secret_key = "supersecretkey"
 
 # Database config
@@ -164,29 +169,32 @@ def physio_appointments():
     if session["user_role"] != "physiotherapist":
         return "Access Denied ❌"
 
-    # find physio profile
     physio = PhysioProfile.query.filter_by(user_id=session["user_id"]).first()
 
-    # find appointments for this physio
+    # ✅ ADD THIS FIX
+    if not physio:
+        return "Please create your profile first ❗"
+
     appointments = Appointment.query.filter_by(physio_id=physio.id).all()
 
     data = []
 
     for appt in appointments:
-     patient = User.query.get(appt.patient_id)
+        patient = User.query.get(appt.patient_id)
 
-     data.append({
-    "id": appt.id,
-    "name": patient.name,
-    "email": patient.email,
-    "date": appt.appointment_date,
-    "status": appt.status
-})
+        if patient:
+            data.append({
+                "id": appt.id,
+                "name": patient.name,
+                "email": patient.email,
+                "date": appt.appointment_date,
+                "status": appt.status
+            })
 
     return render_template(
-    "physio_appointments.html",
-    appointments = data
-)
+        "physio_appointments.html",
+        appointments=data
+    )
 @app.route('/approve/<int:id>')
 def approve(id):
     appt = Appointment.query.get(id)
