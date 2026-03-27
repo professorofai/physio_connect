@@ -13,6 +13,23 @@
 
 <div class="card p-4 shadow">
 
+{% if physio_profile %}
+<div class="text-center mb-3">
+    {% if physio_profile.profile_picture %}
+    <img src="{{ url_for('static', filename='uploads/' + physio_profile.profile_picture) }}" 
+         alt="Profile Picture" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+    {% else %}
+    <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center" 
+         style="width: 150px; height: 150px;">
+        <span class="text-white fs-1">👨‍⚕️</span>
+    </div>
+    {% endif %}
+</div>
+
+<h5 class="text-center">{{ physio_profile.clinic_name }}</h5>
+<p class="text-center text-muted">{{ physio_profile.location }} | {{ physio_profile.specialization }}</p>
+{% endif %}
+
 <h5>Welcome {{ email }}</h5>
 
 <hr>

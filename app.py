@@ -4,11 +4,25 @@ import os
 sys.path.insert(0, '/Users/akshatjauhari/Desktop/Coding/PHYSIOTHERAPIST/physio_connect/venv/lib/python3.14/site-packages')
 
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from flask import Flask, render_template, request, session, redirect
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__, instance_relative_config=True)
 app.secret_key = "supersecretkey"
+
+# Configure upload folder
+UPLOAD_FOLDER = 'static/uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+# Ensure upload directory exists
+import os
+os.makedirs(os.path.join(app.root_path, UPLOAD_FOLDER), exist_ok=True)
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # Database config
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
@@ -28,6 +42,7 @@ class PhysioProfile(db.Model):
     location = db.Column(db.String(200))
     specialization = db.Column(db.String(200))
     experience = db.Column(db.Integer)
+    profile_picture = db.Column(db.String(200))  # filename of uploaded image
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
@@ -95,9 +110,12 @@ def dashboard():
         return redirect("/login")
 
     if session["user_role"] == "physiotherapist":
+        # Get physio profile for dashboard
+        physio_profile = PhysioProfile.query.filter_by(user_id=session["user_id"]).first()
         return render_template(
             "physio_dashboard.html",
-            email=session["user_email"]
+            email=session["user_email"],
+            physio_profile=physio_profile
         )
 
     elif session["user_role"] == "patient":
@@ -113,12 +131,26 @@ def create_profile():
         location = request.form["location"]
         specialization = request.form["specialization"]
 
+        # Handle file upload
+        profile_picture_filename = None
+        if 'profile_picture' in request.files:
+            file = request.files['profile_picture']
+            if file and file.filename != '' and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                # Add timestamp to avoid filename conflicts
+                import time
+                filename = f"{int(time.time())}_{filename}"
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(file_path)
+                profile_picture_filename = filename
+
         profile = PhysioProfile(
-    clinic_name=clinic_name,
-    location=location,
-    specialization=specialization,
-    user_id=session["user_id"]
-)
+            clinic_name=clinic_name,
+            location=location,
+            specialization=specialization,
+            profile_picture=profile_picture_filename,
+            user_id=session["user_id"]
+        )
 
         db.session.add(profile)
         db.session.commit()
