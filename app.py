@@ -156,7 +156,13 @@ def book(physio_id):
         db.session.add(appointment)
         db.session.commit()
 
-        return "Appointment Booked Successfully 🎉"
+        # Get physio details
+        physio = PhysioProfile.query.get(physio_id)
+        
+        return render_template("booking_confirmation.html", 
+                             date=date, 
+                             physio_name=physio.clinic_name if physio else "Unknown",
+                             status="Pending")
 
     return render_template("book.html")
 
