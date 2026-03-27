@@ -20,8 +20,4 @@ coverage.xml
 .mypy_cache
 .pytest_cache
 .hypothesis
-*.db
-*.sqlite
-*.sqlite3
-instance/
 .DS_Store
