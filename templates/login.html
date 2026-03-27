@@ -1,13 +1,53 @@
 {% extends "base.html" %}
 
+{% block title %}Login - Physio Connect{% endblock %}
+
 {% block content %}
-    <h2>Login</h2>
-
-    <form method="POST">
-        Email: <input type="email" name="email"><br>
-        Password: <input type="password" name="password"><br>
-        <button type="submit">Login</button>
-    </form>
-
-    <p>Don't have an account? <a href="/register">Register</a></p>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login to Your Account
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" novalidate>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">
+                                <i class="fas fa-envelope me-1"></i>Email Address
+                            </label>
+                            <input type="email" class="form-control" id="email" name="email" required
+                                   placeholder="Enter your email" data-bs-toggle="tooltip" title="Enter your registered email address">
+                            <div class="invalid-feedback">
+                                Please provide a valid email address.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock me-1"></i>Password
+                            </label>
+                            <input type="password" class="form-control" id="password" name="password" required
+                                   placeholder="Enter your password" data-bs-toggle="tooltip" title="Enter your account password">
+                            <div class="invalid-feedback">
+                                Please provide your password.
+                            </div>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <p class="mb-0">Don't have an account?
+                        <a href="/register" class="text-primary fw-bold" data-bs-toggle="tooltip" title="Create a new account">Register here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

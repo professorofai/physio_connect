@@ -1,33 +1,43 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Booking Confirmation</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+{% extends "base.html" %}
 
-<body class="bg-light">
+{% block title %}Booking Confirmed - Physio Connect{% endblock %}
 
+{% block content %}
 <div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow text-center">
+                <div class="card-body py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
+                        <h2 class="text-success">Appointment Booked Successfully!</h2>
+                        <p class="text-muted">Your appointment has been confirmed. You will receive a confirmation email shortly.</p>
+                    </div>
 
-<div class="card p-4 shadow text-center">
+                    <div class="alert alert-info">
+                        <h5 class="alert-heading">
+                            <i class="fas fa-calendar-check me-1"></i>Appointment Details
+                        </h5>
+                        <hr>
+                        <p class="mb-2"><strong>Date:</strong> {{ date }}</p>
+                        <p class="mb-2"><strong>Physiotherapist:</strong> {{ physio_name }}</p>
+                        <p class="mb-0"><strong>Status:</strong> <span class="badge bg-warning">{{ status }}</span></p>
+                    </div>
 
-<h2 class="text-success">Appointment Booked Successfully! 🎉</h2>
-
-<hr>
-
-<div class="alert alert-info">
-<h5>Appointment Details:</h5>
-<p><strong>Date:</strong> {{ date }}</p>
-<p><strong>Physiotherapist:</strong> {{ physio_name }}</p>
-<p><strong>Status:</strong> <span class="badge bg-warning">{{ status }}</span></p>
+                    <div class="mt-4">
+                        <a href="/physios" class="btn btn-primary me-2">
+                            <i class="fas fa-plus me-1"></i>Book Another
+                        </a>
+                        <a href="/dashboard" class="btn btn-outline-secondary">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-<br>
-
-<a href="/physios" class="btn btn-primary">Book Another Appointment</a>
-<a href="/dashboard" class="btn btn-secondary">Go to Dashboard</a>
-
-</div>
+{% endblock %}
 
 </div>
 

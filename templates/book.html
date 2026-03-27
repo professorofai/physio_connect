@@ -1,26 +1,54 @@
 {% extends "base.html" %}
 
+{% block title %}Book Appointment - Physio Connect{% endblock %}
+
 {% block content %}
 <div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-calendar-plus me-2"></i>Book Your Appointment
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% if physio %}
+                    <div class="physio-info mb-4 p-3 bg-light rounded">
+                        <h5>{{ physio.clinic_name }}</h5>
+                        <p class="mb-1"><i class="fas fa-map-marker-alt me-1"></i>{{ physio.location }}</p>
+                        <p class="mb-0"><i class="fas fa-stethoscope me-1"></i>{{ physio.specialization }}</p>
+                    </div>
+                    {% endif %}
 
-<div class="card p-4 shadow">
-
-<h3>Book Appointment</h3>
-
-<form method="POST">
-
-<label>Select Date</label>
-<input type="date" name="date" class="form-control" required>
-
-<br>
-
-<button type="submit" class="btn btn-primary">
-Confirm Booking
-</button>
-
-</form>
-
-</div>
-
+                    <form method="POST" novalidate>
+                        <div class="mb-4">
+                            <label for="date" class="form-label">
+                                <i class="fas fa-calendar me-1"></i>Select Appointment Date
+                            </label>
+                            <input type="date" class="form-control" id="date" name="date" required
+                                   min="{{ today }}" data-bs-toggle="tooltip" title="Choose your preferred appointment date">
+                            <div class="form-text">
+                                Please select a date at least 1 day in advance.
+                            </div>
+                            <div class="invalid-feedback">
+                                Please select a valid appointment date.
+                            </div>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-check me-1"></i>Confirm Booking
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="/physios" class="text-muted">
+                        <i class="fas fa-arrow-left me-1"></i>Back to Physiotherapists
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

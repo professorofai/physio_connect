@@ -1,17 +1,72 @@
 {% extends "base.html" %}
 
+{% block title %}Home - Physio Connect{% endblock %}
+
 {% block content %}
-<div class="container text-center mt-5">
+<div class="hero-section bg-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4 fade-in">Find the Best Physiotherapists Near You</h1>
+                <p class="lead mb-4 slide-in-left">
+                    Book appointments with trusted physiotherapists in seconds. Get back to your active lifestyle with professional care.
+                </p>
+                <a href="/register" class="btn btn-light btn-lg me-3 mb-3" data-bs-toggle="tooltip" title="Start your journey to better health">
+                    <i class="fas fa-user-plus me-2"></i>Get Started
+                </a>
+                <a href="/physios" class="btn btn-outline-light btn-lg mb-3" data-bs-toggle="tooltip" title="Browse available physiotherapists">
+                    <i class="fas fa-search me-2"></i>Find Physios
+                </a>
+            </div>
+            <div class="col-lg-6 text-center">
+                <img src="{{ url_for('static', filename='hero-image.png') }}" alt="Physiotherapy Illustration" class="img-fluid rounded shadow slide-in-left" style="max-width: 400px;" onerror="this.style.display='none'">
+                <div class="mt-3">
+                    <i class="fas fa-heartbeat fa-3x text-health"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<h1 class="display-4">Find the Best Physiotherapists Near You</h1>
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <i class="fas fa-calendar-check fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Easy Booking</h5>
+                    <p class="card-text">Schedule appointments with just a few clicks. Choose your preferred time and physiotherapist.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <i class="fas fa-user-md fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Expert Care</h5>
+                    <p class="card-text">Connect with certified physiotherapists who specialize in various treatments and rehabilitation.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <i class="fas fa-clock fa-3x text-info mb-3"></i>
+                    <h5 class="card-title">Flexible Hours</h5>
+                    <p class="card-text">Book appointments that fit your schedule, including evenings and weekends.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<p class="lead mt-3">
-Book appointments with trusted physiotherapists in seconds.
-</p>
-
-<br>
-
-<a href="/register" class="btn btn-primary btn-lg">Get Started</a>
-
+<div class="bg-light py-5">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Get Started?</h2>
+        <p class="lead mb-4">Join thousands of patients who have improved their health with Physio Connect.</p>
+        <a href="/register" class="btn btn-primary btn-lg pulse">
+            <i class="fas fa-rocket me-2"></i>Start Your Recovery Journey
+        </a>
+    </div>
 </div>
 {% endblock %}

@@ -1,9 +1,105 @@
 {% extends "base.html" %}
 
+{% block title %}Dashboard - Physio Connect{% endblock %}
+
 {% block content %}
-    <h1>Welcome {{ email }} 🎉</h1>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-tachometer-alt me-2"></i>Welcome back, {{ email }}!
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="mb-3">
+                                <strong>Role:</strong>
+                                <span class="badge bg-{{ 'info' if role == 'patient' else 'success' }} ms-2">
+                                    <i class="fas fa-{{ 'user-injured' if role == 'patient' else 'user-md' }} me-1"></i>
+                                    {{ role.title() }}
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <a href="/logout" class="btn btn-outline-danger">
+                                <i class="fas fa-sign-out-alt me-1"></i>Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <p>You are a <strong>{{ role }}</strong></p>
-
-    <a href="/logout" class="btn btn-secondary">Logout</a>
+    {% if role == 'patient' %}
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-search fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Find Physiotherapists</h5>
+                    <p class="card-text">Browse and book appointments with qualified physiotherapists in your area.</p>
+                    <a href="/physios" class="btn btn-primary">
+                        <i class="fas fa-search me-1"></i>Browse Physios
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-calendar-check fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">My Appointments</h5>
+                    <p class="card-text">View and manage your upcoming physiotherapy appointments.</p>
+                    <a href="/patient_appointments" class="btn btn-success">
+                        <i class="fas fa-calendar me-1"></i>View Appointments
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% elif role == 'physiotherapist' %}
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-user-edit fa-3x text-info mb-3"></i>
+                    <h5 class="card-title">Create Profile</h5>
+                    <p class="card-text">Set up your physiotherapy practice profile to attract patients.</p>
+                    <a href="/create_profile" class="btn btn-info">
+                        <i class="fas fa-plus me-1"></i>Create Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-calendar fa-3x text-warning mb-3"></i>
+                    <h5 class="card-title">Manage Appointments</h5>
+                    <p class="card-text">View and manage your patient appointments and schedule.</p>
+                    <a href="/physio_appointments" class="btn btn-warning">
+                        <i class="fas fa-calendar-alt me-1"></i>Appointments
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-line fa-3x text-secondary mb-3"></i>
+                    <h5 class="card-title">Dashboard</h5>
+                    <p class="card-text">View your practice statistics and patient feedback.</p>
+                    <a href="/physio_dashboard" class="btn btn-secondary">
+                        <i class="fas fa-chart-bar me-1"></i>View Stats
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

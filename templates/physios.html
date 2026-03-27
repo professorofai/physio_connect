@@ -1,39 +1,62 @@
 {% extends "base.html" %}
 
+{% block title %}Find Physiotherapists - Physio Connect{% endblock %}
+
 {% block content %}
 <div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4 text-center">
+                <i class="fas fa-user-md text-primary me-2"></i>Available Physiotherapists
+            </h2>
+            <p class="text-center text-muted mb-5">Choose from our network of qualified physiotherapy professionals</p>
+        </div>
+    </div>
 
-<h2 class="mb-4">Available Physiotherapists</h2>
+    <div class="row">
+        {% for physio in physios %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow">
+                {% if physio.profile_picture %}
+                <img src="{{ url_for('static', filename='uploads/' + physio.profile_picture) }}" class="card-img-top" alt="{{ physio.clinic_name }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="fas fa-user-md fa-3x text-muted"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ physio.clinic_name }}</h5>
+                    <p class="card-text">
+                        <i class="fas fa-map-marker-alt text-muted me-1"></i>
+                        <strong>Location:</strong> {{ physio.location }}
+                    </p>
+                    <p class="card-text">
+                        <i class="fas fa-stethoscope text-muted me-1"></i>
+                        <strong>Specialization:</strong> {{ physio.specialization }}
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a href="/book/{{ physio.id }}" class="btn btn-success w-100" data-bs-toggle="tooltip" title="Book an appointment with {{ physio.clinic_name }}">
+                        <i class="fas fa-calendar-plus me-1"></i>Book Appointment
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 
-<div class="row">
-
-{% for physio in physios %}
-
-<div class="col-md-4">
-
-<div class="card shadow p-3 mb-4">
-
-<h5>{{ physio.clinic_name }}</h5>
-
-<p>
-<b>Location:</b> {{ physio.location }}
-</p>
-
-<p>
-<b>Specialization:</b> {{ physio.specialization }}
-</p>
-
-<a href="/book/{{ physio.id }}" class="btn btn-success">
-Book Appointment
-</a>
-
-</div>
-
-</div>
-
-{% endfor %}
-
-</div>
-
+    {% if not physios %}
+    <div class="row">
+        <div class="col-12 text-center">
+            <div class="card shadow">
+                <div class="card-body py-5">
+                    <i class="fas fa-search fa-4x text-muted mb-3"></i>
+                    <h4 class="text-muted">No Physiotherapists Found</h4>
+                    <p class="text-muted">Check back later or contact us for more options.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

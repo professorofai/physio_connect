@@ -1,6 +1,7 @@
 #!/Users/akshatjauhari/Desktop/Coding/PHYSIOTHERAPIST/physio_connect/venv/bin/python3
 import sys
 import os
+from datetime import datetime
 sys.path.insert(0, '/Users/akshatjauhari/Desktop/Coding/PHYSIOTHERAPIST/physio_connect/venv/lib/python3.14/site-packages')
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -241,7 +242,7 @@ def book(physio_id):
                              physio_name=physio.clinic_name if physio else "Unknown",
                              status="Pending")
 
-    return render_template("book.html")
+    return render_template("book.html", physio=PhysioProfile.query.get(physio_id), today=datetime.now().strftime('%Y-%m-%d'))
 
 @app.route("/physio_appointments")
 def physio_appointments():
