@@ -13,24 +13,30 @@
 
 <h2>Your Appointments</h2>
 
-<table class="table table-bordered">
+<table border="1">
+  <tr>
+    <th>Patient</th>
+    <th>Date</th>
+    <th>Status</th>
+    <th>Action</th>
+  </tr>
 
-<tr>
-<th>Patient Name</th>
-<th>Email</th>
-<th>Date</th>
-</tr>
+  {% for appt in appointments %}
+  <tr>
+    <td>{{ appt.patient_id }}</td>
+    <td>{{ appt.appointment_date }}</td>
+    <td>{{ appt.status }}</td>
 
-{% for appointment in appointments %}
-
-<tr>
-<td>{{ appointment.name }}</td>
-<td>{{ appointment.email }}</td>
-<td>{{ appointment.date }}</td>
-</tr>
-
-{% endfor %}
-
+    <td>
+      {% if appt.status == "Pending" %}
+        <a href="/approve/{{ appt.id }}">Approve</a>
+        <a href="/reject/{{ appt.id }}">Reject</a>
+      {% else %}
+        {{ appt.status }}
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
 </table>
 
 <a href="/dashboard" class="btn btn-secondary">

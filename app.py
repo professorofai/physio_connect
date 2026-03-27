@@ -31,6 +31,7 @@ class Appointment(db.Model):
     patient_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     physio_id = db.Column(db.Integer, db.ForeignKey('physio_profile.id'))
     appointment_date = db.Column(db.String(50))
+    status = db.Column(db.String(20), default="pending")
 
 # Home route
 @app.route("/")
@@ -182,8 +183,25 @@ def physio_appointments():
 
     return render_template(
     "physio_appointments.html",
-    appointments=data
+    appointments = Appointment.query.all()
 )
+@app.route('/approve/<int:id>')
+def approve(id):
+    appt = Appointment.query.get(id)
+    if appt:
+        appt.status = "Approved"
+        db.session.commit()
+    return redirect('/physio_dashboard')
+
+
+@app.route('/reject/<int:id>')
+def reject(id):
+    appt = Appointment.query.get(id)
+    if appt:
+        appt.status = "Rejected"
+        db.session.commit()
+    return redirect('/physio_dashboard')
+
 # Logout route
 @app.route("/logout")
 def logout():
