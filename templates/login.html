@@ -14,14 +14,15 @@
                 </div>
                 <div class="card-body">
                     <form method="POST" novalidate>
+                        <input type="hidden" name="step" value="1">
                         <div class="mb-3">
-                            <label for="email" class="form-label">
-                                <i class="fas fa-envelope me-1"></i>Email Address
+                            <label for="phone_number" class="form-label">
+                                <i class="fas fa-mobile-alt me-1"></i>Phone Number
                             </label>
-                            <input type="email" class="form-control" id="email" name="email" required
-                                   placeholder="Enter your email" data-bs-toggle="tooltip" title="Enter your registered email address">
+                            <input type="tel" class="form-control" id="phone_number" name="phone_number" required
+                                   placeholder="+1234567890" data-bs-toggle="tooltip" title="Enter your registered phone number">
                             <div class="invalid-feedback">
-                                Please provide a valid email address.
+                                Please provide your phone number.
                             </div>
                         </div>
                         <div class="mb-3">
@@ -36,7 +37,7 @@
                         </div>
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                                <i class="fas fa-mobile-alt me-2"></i>Send Verification Code
                             </button>
                         </div>
                     </form>

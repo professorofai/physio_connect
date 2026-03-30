@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Phone Number - Physio Connect{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white text-center">
+                    <h4 class="mb-0">
+                        <i class="fas fa-mobile-alt me-2"></i>Verify Your Phone
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-sms fa-3x text-info mb-3"></i>
+                        <p class="text-muted">We've sent a 6-digit verification code to</p>
+                        <p class="fw-bold">{{ phone_number }}</p>
+                    </div>
+
+                    <form method="POST" novalidate>
+                        <input type="hidden" name="step" value="2">
+                        <input type="hidden" name="phone_number" value="{{ phone_number }}">
+                        <input type="hidden" name="action" value="{{ action }}">
+
+                        <div class="mb-3">
+                            <label for="otp_code" class="form-label">
+                                <i class="fas fa-key me-1"></i>Enter Verification Code
+                            </label>
+                            <input type="text" class="form-control text-center fs-4" id="otp_code" name="otp_code"
+                                   maxlength="6" pattern="[0-9]{6}" required
+                                   placeholder="000000" data-bs-toggle="tooltip" title="Enter the 6-digit code sent to your phone">
+                            <div class="invalid-feedback">
+                                Please enter a valid 6-digit code.
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-info btn-lg">
+                                <i class="fas fa-check me-1"></i>Verify Code
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <small class="text-muted">
+                            Didn't receive the code?
+                            <a href="#" onclick="resendOTP()" class="text-info fw-bold" id="resend-link">
+                                <i class="fas fa-redo me-1"></i>Resend
+                            </a>
+                        </small>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="/{{ 'register' if action == 'register' else 'login' }}" class="text-muted">
+                        <i class="fas fa-arrow-left me-1"></i>Back to {{ 'Register' if action == 'register' else 'Login' }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-focus on OTP input
+document.getElementById('otp_code').focus();
+
+// Auto-submit when 6 digits are entered
+document.getElementById('otp_code').addEventListener('input', function(e) {
+    const value = e.target.value.replace(/\D/g, '');
+    e.target.value = value;
+
+    if (value.length === 6) {
+        // Auto-submit the form
+        setTimeout(() => {
+            e.target.form.submit();
+        }, 500);
+    }
+});
+
+function resendOTP() {
+    const link = document.getElementById('resend-link');
+    const originalText = link.innerHTML;
+    link.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Resending...';
+    link.style.pointerEvents = 'none';
+
+    // Here you would make an AJAX call to resend OTP
+    // For now, just show a message
+    setTimeout(() => {
+        alert('Verification code resent to your phone.');
+        link.innerHTML = originalText;
+        link.style.pointerEvents = 'auto';
+    }, 2000);
+}
+
+// Add visual feedback for OTP input
+document.getElementById('otp_code').addEventListener('input', function(e) {
+    const value = e.target.value;
+    if (value.length === 6) {
+        this.classList.remove('is-invalid');
+        this.classList.add('is-valid');
+    } else {
+        this.classList.remove('is-valid', 'is-invalid');
+    }
+});
+</script>
+{% endblock %}

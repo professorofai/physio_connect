@@ -1,7 +1,9 @@
 #!/Users/akshatjauhari/Desktop/Coding/PHYSIOTHERAPIST/physio_connect/venv/bin/python3
 import sys
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
+import random
+import string
 sys.path.insert(0, '/Users/akshatjauhari/Desktop/Coding/PHYSIOTHERAPIST/physio_connect/venv/lib/python3.14/site-packages')
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -31,6 +33,11 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_FROM = os.environ.get('EMAIL_FROM', EMAIL_HOST_USER)
 
+# Twilio SMS config (set these in environment variables)
+TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
+TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
+
 
 def send_registration_email(to_email, username):
     if not EMAIL_HOST_USER or not EMAIL_HOST_PASSWORD:
@@ -53,6 +60,69 @@ def send_registration_email(to_email, username):
         app.logger.error(f"Failed to send registration email: {e}")
         return False
 
+def generate_otp():
+    """Generate a 6-digit OTP"""
+    return ''.join(random.choices(string.digits, k=6))
+
+def send_sms_otp(phone_number, otp_code):
+    """Send OTP via SMS using Twilio"""
+    if not TWILIO_ACCOUNT_SID or not TWILIO_AUTH_TOKEN or not TWILIO_PHONE_NUMBER:
+        app.logger.warning('Twilio credentials not configured; skipping SMS send.')
+        return False
+
+    try:
+        from twilio.rest import Client
+        client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+
+        message = client.messages.create(
+            body=f"Your Physio Connect verification code is: {otp_code}. This code will expire in 10 minutes.",
+            from_=TWILIO_PHONE_NUMBER,
+            to=phone_number
+        )
+        return True
+    except Exception as e:
+        app.logger.error(f"Failed to send SMS: {e}")
+        return False
+
+def create_otp_verification(phone_number):
+    """Create and store OTP verification"""
+    otp_code = generate_otp()
+    expires_at = datetime.utcnow() + timedelta(minutes=10)
+
+    # Clean up expired OTPs for this phone number
+    OTPVerification.query.filter_by(phone_number=phone_number, is_used=False).delete()
+
+    otp_verification = OTPVerification(
+        phone_number=phone_number,
+        otp_code=otp_code,
+        expires_at=expires_at
+    )
+
+    db.session.add(otp_verification)
+    db.session.commit()
+
+    return otp_code
+
+def verify_otp(phone_number, otp_code):
+    """Verify OTP code"""
+    otp_verification = OTPVerification.query.filter_by(
+        phone_number=phone_number,
+        otp_code=otp_code,
+        is_used=False
+    ).first()
+
+    if not otp_verification:
+        return False
+
+    if datetime.utcnow() > otp_verification.expires_at:
+        return False
+
+    # Mark OTP as used
+    otp_verification.is_used = True
+    db.session.commit()
+
+    return True
+
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -67,8 +137,19 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     email = db.Column(db.String(100))
+    phone_number = db.Column(db.String(15))  # Store phone number with country code
+    city = db.Column(db.String(100))  # User's city
     password = db.Column(db.String(100))
     role = db.Column(db.String(20))  # patient or physiotherapist
+    is_verified = db.Column(db.Boolean, default=False)  # Phone verification status
+
+class OTPVerification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    phone_number = db.Column(db.String(15))
+    otp_code = db.Column(db.String(6))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    expires_at = db.Column(db.DateTime)
+    is_used = db.Column(db.Boolean, default=False)
 
 class PhysioProfile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -96,36 +177,96 @@ def home():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        name = request.form.get("name")
-        email = request.form.get("email")
-        password = request.form.get("password")
-        role = request.form.get("role")
+        step = request.form.get("step", "1")
 
-        hashed_password = generate_password_hash(password)
+        if step == "1":  # Initial registration
+            name = request.form.get("name")
+            email = request.form.get("email")
+            phone_number = request.form.get("phone_number")
+            city = request.form.get("city")
+            password = request.form.get("password")
+            role = request.form.get("role")
 
-        new_user = User(
-            name=name,
-            email=email,
-            password=hashed_password,
-            role=role
-        )
+            # Basic validation
+            if not all([name, email, phone_number, city, password, role]):
+                flash('All fields are required.', 'danger')
+                return render_template("register.html")
 
-        db.session.add(new_user)
-        db.session.commit()
+            # Check if user already exists
+            existing_user = User.query.filter(
+                (User.email == email) | (User.phone_number == phone_number)
+            ).first()
+            if existing_user:
+                flash('User with this email or phone number already exists.', 'danger')
+                return render_template("register.html")
 
-        # Send confirmation email after successful registration
-        email_sent = send_registration_email(email, name)
-        if not email_sent:
-            flash('Registration successful, but confirmation email was not sent. Please check server logs.', 'warning')
-        else:
-            flash('Registration successful! Confirmation email has been sent.', 'success')
+            # Store registration data in session temporarily
+            session['reg_data'] = {
+                'name': name,
+                'email': email,
+                'phone_number': phone_number,
+                'city': city,
+                'password': password,
+                'role': role
+            }
 
-        # Auto-login after registration
-        session["user_id"] = new_user.id
-        session["user_email"] = new_user.email
-        session["user_role"] = new_user.role
+            # Generate and send OTP
+            otp_code = create_otp_verification(phone_number)
+            sms_sent = send_sms_otp(phone_number, otp_code)
 
-        return redirect("/dashboard")
+            if not sms_sent:
+                flash('Failed to send verification SMS. Please try again.', 'danger')
+                return render_template("register.html")
+
+            flash('Verification code sent to your phone. Please enter it below.', 'info')
+            return render_template("verify_otp.html", phone_number=phone_number, action="register")
+
+        elif step == "2":  # OTP verification
+            phone_number = request.form.get("phone_number")
+            otp_code = request.form.get("otp_code")
+
+            if not verify_otp(phone_number, otp_code):
+                flash('Invalid or expired verification code.', 'danger')
+                return render_template("verify_otp.html", phone_number=phone_number, action="register")
+
+            # Get registration data from session
+            reg_data = session.get('reg_data')
+            if not reg_data:
+                flash('Registration session expired. Please start over.', 'danger')
+                return redirect("/register")
+
+            # Create user account
+            hashed_password = generate_password_hash(reg_data['password'])
+
+            new_user = User(
+                name=reg_data['name'],
+                email=reg_data['email'],
+                phone_number=reg_data['phone_number'],
+                city=reg_data['city'],
+                password=hashed_password,
+                role=reg_data['role'],
+                is_verified=True
+            )
+
+            db.session.add(new_user)
+            db.session.commit()
+
+            # Clear session data
+            session.pop('reg_data', None)
+
+            # Send confirmation email
+            email_sent = send_registration_email(reg_data['email'], reg_data['name'])
+            if not email_sent:
+                flash('Registration successful, but confirmation email was not sent.', 'warning')
+            else:
+                flash('Registration successful! Welcome to Physio Connect.', 'success')
+
+            # Auto-login after registration
+            session["user_id"] = new_user.id
+            session["user_email"] = new_user.email
+            session["user_role"] = new_user.role
+
+            return redirect("/dashboard")
 
     return render_template("register.html")
 
@@ -133,20 +274,63 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form.get("email")
-        password = request.form.get("password")
+        step = request.form.get("step", "1")
 
-        # Find user by email only
-        user = User.query.filter_by(email=email).first()
+        if step == "1":  # Phone/Password verification
+            phone_number = request.form.get("phone_number")
+            password = request.form.get("password")
 
-        # Check if user exists AND password matches hash
-        if user and check_password_hash(user.password, password):
+            if not phone_number or not password:
+                flash('Phone number and password are required.', 'danger')
+                return render_template("login.html")
+
+            # Find user by phone number
+            user = User.query.filter_by(phone_number=phone_number).first()
+
+            if not user or not check_password_hash(user.password, password):
+                flash('Invalid phone number or password.', 'danger')
+                return render_template("login.html")
+
+            # Generate and send OTP
+            otp_code = create_otp_verification(phone_number)
+            sms_sent = send_sms_otp(phone_number, otp_code)
+
+            if not sms_sent:
+                flash('Failed to send verification SMS. Please try again.', 'danger')
+                return render_template("login.html")
+
+            # Store user ID in session temporarily
+            session['login_user_id'] = user.id
+            flash('Verification code sent to your phone. Please enter it below.', 'info')
+            return render_template("verify_otp.html", phone_number=phone_number, action="login")
+
+        elif step == "2":  # OTP verification
+            phone_number = request.form.get("phone_number")
+            otp_code = request.form.get("otp_code")
+
+            if not verify_otp(phone_number, otp_code):
+                flash('Invalid or expired verification code.', 'danger')
+                return render_template("verify_otp.html", phone_number=phone_number, action="login")
+
+            # Get user from session
+            user_id = session.get('login_user_id')
+            if not user_id:
+                flash('Login session expired. Please start over.', 'danger')
+                return redirect("/login")
+
+            user = User.query.get(user_id)
+            if not user:
+                flash('User not found.', 'danger')
+                return redirect("/login")
+
+            # Clear temporary session data and set login session
+            session.pop('login_user_id', None)
             session["user_id"] = user.id
             session["user_email"] = user.email
             session["user_role"] = user.role
+
+            flash('Login successful! Welcome back.', 'success')
             return redirect("/dashboard")
-        else:
-            return "Invalid Credentials ❌"
 
     return render_template("login.html")
 # Dashboard route

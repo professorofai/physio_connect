@@ -14,14 +14,40 @@
                 </div>
                 <div class="card-body">
                     <form method="POST" novalidate>
+                        <input type="hidden" name="step" value="1">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">
+                                    <i class="fas fa-user me-1"></i>Full Name
+                                </label>
+                                <input type="text" class="form-control" id="name" name="name" required
+                                       placeholder="Enter your full name" data-bs-toggle="tooltip" title="Enter your complete name">
+                                <div class="invalid-feedback">
+                                    Please provide your full name.
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="phone_number" class="form-label">
+                                    <i class="fas fa-mobile-alt me-1"></i>Phone Number
+                                </label>
+                                <input type="tel" class="form-control" id="phone_number" name="phone_number" required
+                                       placeholder="+1234567890" pattern="^\+[1-9]\d{1,14}$" data-bs-toggle="tooltip" title="Enter your phone number with country code (e.g., +1234567890)">
+                                <div class="form-text">
+                                    Include country code (e.g., +1 for US, +91 for India)
+                                </div>
+                                <div class="invalid-feedback">
+                                    Please provide a valid phone number with country code.
+                                </div>
+                            </div>
+                        </div>
                         <div class="mb-3">
-                            <label for="name" class="form-label">
-                                <i class="fas fa-user me-1"></i>Full Name
+                            <label for="city" class="form-label">
+                                <i class="fas fa-city me-1"></i>City
                             </label>
-                            <input type="text" class="form-control" id="name" name="name" required
-                                   placeholder="Enter your full name" data-bs-toggle="tooltip" title="Enter your complete name">
+                            <input type="text" class="form-control" id="city" name="city" required
+                                   placeholder="Enter your city" data-bs-toggle="tooltip" title="Enter the city where you live">
                             <div class="invalid-feedback">
-                                Please provide your full name.
+                                Please provide your city.
                             </div>
                         </div>
                         <div class="mb-3">
@@ -59,7 +85,7 @@
                         </div>
                         <div class="d-grid">
                             <button type="submit" class="btn btn-success btn-lg">
-                                <i class="fas fa-user-plus me-2"></i>Create Account
+                                <i class="fas fa-mobile-alt me-2"></i>Send Verification Code
                             </button>
                         </div>
                     </form>
