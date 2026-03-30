@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Verify Phone Number - Physio Connect{% endblock %}
+{% block title %}Verify Email - Physio Connect{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
@@ -9,19 +9,19 @@
             <div class="card shadow">
                 <div class="card-header bg-info text-white text-center">
                     <h4 class="mb-0">
-                        <i class="fas fa-mobile-alt me-2"></i>Verify Your Phone
+                        <i class="fas fa-envelope me-2"></i>Verify Your Email
                     </h4>
                 </div>
                 <div class="card-body">
                     <div class="text-center mb-4">
-                        <i class="fas fa-sms fa-3x text-info mb-3"></i>
+                        <i class="fas fa-envelope fa-3x text-info mb-3"></i>
                         <p class="text-muted">We've sent a 6-digit verification code to</p>
-                        <p class="fw-bold">{{ phone_number }}</p>
+                        <p class="fw-bold">{{ email }}</p>
                     </div>
 
                     <form method="POST" novalidate>
                         <input type="hidden" name="step" value="2">
-                        <input type="hidden" name="phone_number" value="{{ phone_number }}">
+                        <input type="hidden" name="email" value="{{ email }}">
                         <input type="hidden" name="action" value="{{ action }}">
 
                         <div class="mb-3">
@@ -30,7 +30,7 @@
                             </label>
                             <input type="text" class="form-control text-center fs-4" id="otp_code" name="otp_code"
                                    maxlength="6" pattern="[0-9]{6}" required
-                                   placeholder="000000" data-bs-toggle="tooltip" title="Enter the 6-digit code sent to your phone">
+                                   placeholder="000000" data-bs-toggle="tooltip" title="Enter the 6-digit code sent to your email">
                             <div class="invalid-feedback">
                                 Please enter a valid 6-digit code.
                             </div>

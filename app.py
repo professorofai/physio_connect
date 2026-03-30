@@ -26,17 +26,12 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 import os
 os.makedirs(os.path.join(app.root_path, UPLOAD_FOLDER), exist_ok=True)
 
-# Email config (set these in environment variables)
-EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
-EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-EMAIL_FROM = os.environ.get('EMAIL_FROM', EMAIL_HOST_USER)
-
-# Twilio SMS config (set these in environment variables)
-TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
-TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
-TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
+# Email config
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'jauhariakshat21@gmail.com'
+EMAIL_HOST_PASSWORD = 'oqsy puen xbwz pqlw'
+EMAIL_FROM = 'jauhariakshat21@gmail.com'
 
 
 def send_registration_email(to_email, username):
@@ -64,36 +59,38 @@ def generate_otp():
     """Generate a 6-digit OTP"""
     return ''.join(random.choices(string.digits, k=6))
 
-def send_sms_otp(phone_number, otp_code):
-    """Send OTP via SMS using Twilio"""
-    if not TWILIO_ACCOUNT_SID or not TWILIO_AUTH_TOKEN or not TWILIO_PHONE_NUMBER:
-        app.logger.warning('Twilio credentials not configured; skipping SMS send.')
+def send_email_otp(email, otp_code):
+    """Send OTP via email"""
+    if not EMAIL_HOST_USER or not EMAIL_HOST_PASSWORD:
+        app.logger.warning('Email credentials not configured; skipping email send.')
         return False
+
+    msg = EmailMessage()
+    msg['Subject'] = 'Your Physio Connect Verification Code'
+    msg['From'] = EMAIL_FROM
+    msg['To'] = email
+    msg.set_content(f"Your Physio Connect verification code is: {otp_code}. This code will expire in 10 minutes.")
 
     try:
-        from twilio.rest import Client
-        client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-
-        message = client.messages.create(
-            body=f"Your Physio Connect verification code is: {otp_code}. This code will expire in 10 minutes.",
-            from_=TWILIO_PHONE_NUMBER,
-            to=phone_number
-        )
+        with smtplib.SMTP(EMAIL_HOST, EMAIL_PORT) as smtp:
+            smtp.starttls()
+            smtp.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
+            smtp.send_message(msg)
         return True
     except Exception as e:
-        app.logger.error(f"Failed to send SMS: {e}")
+        app.logger.error(f"Failed to send email: {e}")
         return False
 
-def create_otp_verification(phone_number):
+def create_otp_verification(email):
     """Create and store OTP verification"""
     otp_code = generate_otp()
     expires_at = datetime.utcnow() + timedelta(minutes=10)
 
-    # Clean up expired OTPs for this phone number
-    OTPVerification.query.filter_by(phone_number=phone_number, is_used=False).delete()
+    # Clean up expired OTPs for this email
+    OTPVerification.query.filter_by(email=email, is_used=False).delete()
 
     otp_verification = OTPVerification(
-        phone_number=phone_number,
+        email=email,
         otp_code=otp_code,
         expires_at=expires_at
     )
@@ -103,10 +100,10 @@ def create_otp_verification(phone_number):
 
     return otp_code
 
-def verify_otp(phone_number, otp_code):
+def verify_otp(email, otp_code):
     """Verify OTP code"""
     otp_verification = OTPVerification.query.filter_by(
-        phone_number=phone_number,
+        email=email,
         otp_code=otp_code,
         is_used=False
     ).first()
@@ -137,15 +134,15 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     email = db.Column(db.String(100))
-    phone_number = db.Column(db.String(15))  # Store phone number with country code
+    phone_number = db.Column(db.String(15))  # Phone number for contact
     city = db.Column(db.String(100))  # User's city
     password = db.Column(db.String(100))
     role = db.Column(db.String(20))  # patient or physiotherapist
-    is_verified = db.Column(db.Boolean, default=False)  # Phone verification status
+    is_verified = db.Column(db.Boolean, default=False)  # Email verification status
 
 class OTPVerification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    phone_number = db.Column(db.String(15))
+    email = db.Column(db.String(100))
     otp_code = db.Column(db.String(6))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     expires_at = db.Column(db.DateTime)
@@ -211,23 +208,23 @@ def register():
             }
 
             # Generate and send OTP
-            otp_code = create_otp_verification(phone_number)
-            sms_sent = send_sms_otp(phone_number, otp_code)
+            otp_code = create_otp_verification(email)
+            email_sent = send_email_otp(email, otp_code)
 
-            if not sms_sent:
-                flash('Failed to send verification SMS. Please try again.', 'danger')
+            if not email_sent:
+                flash('Failed to send verification email. Please try again.', 'danger')
                 return render_template("register.html")
 
-            flash('Verification code sent to your phone. Please enter it below.', 'info')
-            return render_template("verify_otp.html", phone_number=phone_number, action="register")
+            flash('Verification code sent to your email. Please enter it below.', 'info')
+            return render_template("verify_otp.html", email=email, action="register")
 
         elif step == "2":  # OTP verification
-            phone_number = request.form.get("phone_number")
+            email = request.form.get("email")
             otp_code = request.form.get("otp_code")
 
-            if not verify_otp(phone_number, otp_code):
+            if not verify_otp(email, otp_code):
                 flash('Invalid or expired verification code.', 'danger')
-                return render_template("verify_otp.html", phone_number=phone_number, action="register")
+                return render_template("verify_otp.html", email=email, action="register")
 
             # Get registration data from session
             reg_data = session.get('reg_data')
@@ -274,63 +271,27 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        step = request.form.get("step", "1")
+        email = request.form.get("email")
+        password = request.form.get("password")
 
-        if step == "1":  # Phone/Password verification
-            phone_number = request.form.get("phone_number")
-            password = request.form.get("password")
+        if not email or not password:
+            flash('Email and password are required.', 'danger')
+            return render_template("login.html")
 
-            if not phone_number or not password:
-                flash('Phone number and password are required.', 'danger')
-                return render_template("login.html")
+        # Find user by email
+        user = User.query.filter_by(email=email).first()
 
-            # Find user by phone number
-            user = User.query.filter_by(phone_number=phone_number).first()
+        if not user or not check_password_hash(user.password, password):
+            flash('Invalid email or password.', 'danger')
+            return render_template("login.html")
 
-            if not user or not check_password_hash(user.password, password):
-                flash('Invalid phone number or password.', 'danger')
-                return render_template("login.html")
+        # Set login session
+        session["user_id"] = user.id
+        session["user_email"] = user.email
+        session["user_role"] = user.role
 
-            # Generate and send OTP
-            otp_code = create_otp_verification(phone_number)
-            sms_sent = send_sms_otp(phone_number, otp_code)
-
-            if not sms_sent:
-                flash('Failed to send verification SMS. Please try again.', 'danger')
-                return render_template("login.html")
-
-            # Store user ID in session temporarily
-            session['login_user_id'] = user.id
-            flash('Verification code sent to your phone. Please enter it below.', 'info')
-            return render_template("verify_otp.html", phone_number=phone_number, action="login")
-
-        elif step == "2":  # OTP verification
-            phone_number = request.form.get("phone_number")
-            otp_code = request.form.get("otp_code")
-
-            if not verify_otp(phone_number, otp_code):
-                flash('Invalid or expired verification code.', 'danger')
-                return render_template("verify_otp.html", phone_number=phone_number, action="login")
-
-            # Get user from session
-            user_id = session.get('login_user_id')
-            if not user_id:
-                flash('Login session expired. Please start over.', 'danger')
-                return redirect("/login")
-
-            user = User.query.get(user_id)
-            if not user:
-                flash('User not found.', 'danger')
-                return redirect("/login")
-
-            # Clear temporary session data and set login session
-            session.pop('login_user_id', None)
-            session["user_id"] = user.id
-            session["user_email"] = user.email
-            session["user_role"] = user.role
-
-            flash('Login successful! Welcome back.', 'success')
-            return redirect("/dashboard")
+        flash('Login successful! Welcome back.', 'success')
+        return redirect("/dashboard")
 
     return render_template("login.html")
 # Dashboard route
