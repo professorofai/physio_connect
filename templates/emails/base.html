@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Physio Connect{% endblock %}</title>
+    <style>
+        /* Base styles for email compatibility */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8fafc;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        .email-wrapper {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f8fafc;
+            padding: 20px;
+        }
+
+        .email-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            padding: 40px 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .header p {
+            margin: 8px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .footer {
+            background-color: #f8fafc;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .footer-text {
+            color: #64748b;
+            font-size: 14px;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .brand-logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .brand-tagline {
+            font-size: 14px;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        /* Security indicator */
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            background: #dcfce7;
+            color: #166534;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 16px;
+        }
+
+        .security-badge::before {
+            content: "🔒";
+            margin-right: 6px;
+        }
+
+        /* Responsive design */
+        @media only screen and (max-width: 600px) {
+            .email-wrapper {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .footer {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-wrapper">
+        <div class="email-card">
+            <!-- Header -->
+            <div class="header">
+                <div class="brand-logo">🏥 Physio Connect</div>
+                <p class="brand-tagline">Professional Physiotherapy Services</p>
+                <div class="security-badge">Secure Verification</div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="content">
+                {% block content %}{% endblock %}
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                <p class="footer-text">
+                    This email was sent by Physio Connect<br>
+                    If you didn't request this verification, please ignore this email.<br>
+                    <strong>Need help?</strong> Contact us at support@physioconnect.com
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

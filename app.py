@@ -60,16 +60,22 @@ def generate_otp():
     return ''.join(random.choices(string.digits, k=6))
 
 def send_email_otp(email, otp_code):
-    """Send OTP via email"""
+    """Send OTP via email with HTML template"""
     if not EMAIL_HOST_USER or not EMAIL_HOST_PASSWORD:
         app.logger.warning('Email credentials not configured; skipping email send.')
         return False
+
+    # Render HTML template
+    html_content = render_template('emails/otp_verification.html', otp_code=otp_code)
 
     msg = EmailMessage()
     msg['Subject'] = 'Your Physio Connect Verification Code'
     msg['From'] = EMAIL_FROM
     msg['To'] = email
+
+    # Set both plain text and HTML content
     msg.set_content(f"Your Physio Connect verification code is: {otp_code}. This code will expire in 10 minutes.")
+    msg.add_alternative(html_content, subtype='html')
 
     try:
         with smtplib.SMTP(EMAIL_HOST, EMAIL_PORT) as smtp:
