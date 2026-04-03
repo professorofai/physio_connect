@@ -1,148 +1,332 @@
-/* Custom CSS for Physio Connect - Physiotherapy Theme */
+/* Custom CSS for Physio Connect - Healthcare Startup Design System */
 
 /* Import Bootstrap CSS */
 @import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css');
 
-/* Custom Variables */
+/* Design tokens */
 :root {
-    --primary-color: #007bff; /* Blue for trust */
-    --secondary-color: #28a745; /* Green for health */
-    --accent-color: #17a2b8; /* Teal for care */
-    --light-bg: #f8f9fa;
-    --dark-text: #343a40;
-    --navbar-bg: #ffffff;
-    --navbar-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    --primary-color: #0A1931;
+    --secondary-color: #B3CFE5;
+    --accent-color: #61b2ef;
+    --background-color: #1A3D63;
+    --text-color: #F6FAFD;
+    --surface-color: #1F4D7A;
+    --muted-color: #DDEAF6;
+    --border-color: rgba(255,255,255,0.15);
+    --shadow: 0 8px 24px rgba(0,0,0,0.12);
+    --radius: 14px;
 }
 
 /* Body and Global Styles */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, var(--light-bg) 0%, #e9ecef 100%);
-    color: var(--dark-text);
-    min-height: 100vh;
+* {
+    box-sizing: border-box;
 }
 
-/* Navbar Enhancements */
+body {
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #FFFFFF;
+    color: #1A1A1A;
+    min-height: 100vh;
+    margin: 0;
+}
+
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+a:hover,
+a:focus {
+    color: #2d5a7b;
+    text-decoration: underline;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #0A1931;
+}
+
+/* Hero Section */
+.hero-section {
+    height: 100vh;
+    background: linear-gradient(
+        rgba(0, 0, 0, 0.65),
+        rgba(0, 0, 0, 0.45)
+    ),
+    url("/static/images/hero bg image.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    padding: 0 80px;
+    color: white;
+}
+
+.hero-section .lead {
+    color: rgba(246, 250, 253, 0.90);
+}
+
+.hero-section h1,
+.hero-section .display-4 {
+    color: white;
+}
+
+.hero-section .btn-light {
+    color: var(--primary-color);
+    background: #F6FAFD;
+    border: 1px solid rgba(246, 250, 253, 0.45);
+}
+
+.hero-section .btn-light:hover {
+    background: #EDF7FF;
+}
+
+.hero-section .btn-outline-light {
+    color: white;
+    background: transparent;
+    border: 2px solid white;
+}
+
+.hero-section .btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: white;
+}
+
+/* Navbar */
 .navbar-custom {
-    background-color: var(--navbar-bg) !important;
-    box-shadow: var(--navbar-shadow);
-    border-bottom: 1px solid #dee2e6;
+    background: transparent !important;
+    border-bottom: none;
+    backdrop-filter: blur(8px);
+    box-shadow: none;
+    padding: 1rem 0 !important;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1030;
 }
 
 .navbar-brand {
-    font-weight: 600;
-    color: var(--primary-color) !important;
+    color: white !important;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .navbar-brand:hover {
-    color: var(--secondary-color) !important;
+    color: rgba(255, 255, 255, 0.8) !important;
 }
 
 .navbar-nav .nav-link {
-    color: var(--dark-text) !important;
-    font-weight: 500;
-    transition: color 0.3s ease;
+    color: white !important;
+    font-weight: 600;
+    padding: 0.8rem 1.1rem !important;
+    transition: all 0.2s ease;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .navbar-nav .nav-link:hover {
-    color: var(--primary-color) !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    text-decoration: none !important;
+    transform: scale(1.1);
 }
 
-/* Button Enhancements */
+.navbar-nav .btn-primary {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: white !important;
+    transition: all 0.2s ease;
+}
+
+.navbar-nav .btn-primary:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    text-decoration: none !important;
+    transform: scale(1.1);
+}
+
+/* Buttons */
 .btn-primary {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-    transition: all 0.3s ease;
+    background-color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    color: var(--text-color);
+    border-radius: 10px;
+    box-shadow: 0 8px 18px rgba(74, 127, 167, 0.35);
+    transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
 .btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+    background-color: #3f96b9;
+    border-color: #3f96b9;
+    transform: translateY(-2px);
 }
 
 .btn-secondary {
-    background-color: var(--secondary-color);
-    border-color: var(--secondary-color);
+    background: #B3CFE5;
+    border: 1px solid #4A7FA7;
+    color: #0A1931;
 }
 
 .btn-secondary:hover {
-    background-color: #1e7e34;
-    border-color: #1e7e34;
+    background: #9ABFD3;
 }
 
-/* Card Enhancements */
+.btn-outline-light {
+    border-color: #4A7FA7;
+    color: #4A7FA7;
+}
+
+.btn-outline-light:hover {
+    background: rgba(74,127,167,0.1);
+}
+
+/* Forms */
+.form-control,
+.form-select {
+    background: #FFFFFF;
+    border: 1px solid #D0D8E0;
+    color: #1A1A1A;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.form-control:focus,
+.form-select:focus {
+    background: #FFFFFF;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 0.2rem rgba(74,127,167,0.15);
+    color: #1A1A1A;
+}
+
+label {
+    color: #1A1A1A;
+    font-weight: 600;
+}
+
+/* Dashboard Cards */
 .card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #FFFFFF;
+    border: 1px solid #54ACBF;
+    border-top: 4px solid #54ACBF;
+    border-radius: var(--radius);
+    color: #1A1A1A;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
 }
 
-.card-header {
-    background-color: var(--primary-color);
-    color: white;
-    border-radius: 12px 12px 0 0 !important;
+.card .card-title {
+    color: #0A1931;
+    font-weight: 700;
 }
 
-/* Form Enhancements */
-.form-control {
-    border-radius: 8px;
-    border: 1px solid #ced4da;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+.card .card-text {
+    color: #4A4A4A;
 }
 
-.form-control:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+/* Profile Cards */
+.profile-card {
+    background: #FFFFFF;
+    border: 1px solid #E0E8F0;
+    border-radius: 15px;
+    padding: 1.25rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* Animation Classes */
-.fade-in {
-    animation: fadeIn 0.5s ease-in;
+.profile-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.15);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+.profile-card .name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #0A1931;
 }
 
-.slide-in-left {
-    animation: slideInLeft 0.5s ease-out;
+.profile-card .info,
+.profile-card .meta {
+    color: #666666;
 }
 
-@keyframes slideInLeft {
-    from { opacity: 0; transform: translateX(-30px); }
-    to { opacity: 1; transform: translateX(0); }
+.profile-card img {
+    border-radius: 50%;
+    border: 2px solid var(--accent-color);
+    object-fit: cover;
+    width: 70px;
+    height: 70px;
 }
 
-/* Responsive Design */
+/* Appointment Status Badges */
+.badge-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 700;
+    border-radius: 10px;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.85rem;
+    color: #fff;
+}
+
+.badge-status.upcoming {
+    background: linear-gradient(120deg, #4A7FA7, #70A8D1);
+}
+
+.badge-status.completed {
+    background: linear-gradient(120deg, #2A6B44, #4A8F63);
+}
+
+.badge-status.cancelled {
+    background: linear-gradient(120deg, #A83131, #D95151);
+}
+
+.badge-status.pending {
+    background: linear-gradient(120deg, #B3CFE5, #8BB9D4);
+    color: #0A1931;
+}
+
+.badge-status.urgent {
+    background: #E1B600;
+    color: #0A1931;
+}
+
+/* Links */
+.link-clean {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.link-clean:hover {
+    color: var(--secondary-color);
+}
+
+/* Utilities */
+.bg-surface {
+    background: #F5F9FC;
+}
+
+.bg-soft {
+    background: #E8F0F8;
+}
+
+.text-muted-soft {
+    color: #777777;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-    .navbar-brand img {
-        width: 24px;
-        height: 24px;
+    .navbar-custom {
+        padding: 0.7rem 1rem;
     }
 
-    .display-4 {
-        font-size: 2rem;
+    .profile-card {
+        padding: 1rem;
     }
-}
 
-/* Custom Utilities */
-.bg-health {
-    background-color: var(--secondary-color) !important;
-}
-
-.text-health {
-    color: var(--secondary-color) !important;
-}
-
-.border-health {
-    border-color: var(--secondary-color) !important;
+    .card {
+        margin-bottom: 1.1rem;
+    }
 }
