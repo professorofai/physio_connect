@@ -38,6 +38,33 @@
             color: white;
         }
 
+        .header-inner {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .brand-logo {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .brand-logo img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            object-fit: cover;
+            display: block;
+        }
+
         .header h1 {
             margin: 0;
             font-size: 28px;
@@ -131,7 +158,12 @@
         <div class="email-card">
             <!-- Header -->
             <div class="header">
-                <div class="brand-logo">🏥 Physio Connect</div>
+                <div class="header-inner">
+                    <div class="brand-logo">
+                        <img src="{{ url_for('static', filename='images/Physio.png', _external=True) }}" alt="Physio Connect logo">
+                        <span>Physio Connect</span>
+                    </div>
+                </div>
                 <p class="brand-tagline">Professional Physiotherapy Services</p>
                 <div class="security-badge">Secure Verification</div>
             </div>

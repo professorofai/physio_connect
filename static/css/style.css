@@ -49,13 +49,14 @@ h1, h2, h3, h4, h5, h6 {
 .hero-section {
     height: 100vh;
     background: linear-gradient(
-        rgba(0, 0, 0, 0.65),
-        rgba(0, 0, 0, 0.45)
+        rgba(10, 25, 49, 0.65),
+        rgba(10, 25, 49, 0.65)
     ),
     url("/static/images/hero bg image.webp");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-attachment: fixed;
     display: flex;
     align-items: center;
     padding: 0 80px;
@@ -92,13 +93,121 @@ h1, h2, h3, h4, h5, h6 {
     border-color: white;
 }
 
+/* Register Section */
+.register-section {
+    min-height: 100vh;
+    background: linear-gradient(
+        rgba(10, 25, 49, 0.65),
+        rgba(10, 25, 49, 0.65)
+    ),
+    url("/static/images/hero bg image.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    padding: 120px 20px 40px 20px;
+}
+
+.register-section .card {
+    background: linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)),
+        url("/static/images/formbg.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-blend-mode: overlay;
+    border: 1px solid #54ACBF;
+    border-top: 4px solid #54ACBF;
+    border-radius: 1rem;
+    color: #1A1A1A;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+}
+
+.register-section .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.register-section .card-header {
+    background: linear-gradient(135deg, #54ACBF 0%, #4A7FA7 100%);
+    color: white;
+    border-radius: 13px 13px 0 0;
+}
+
+.register-section .btn-success {
+    background: linear-gradient(135deg, #54ACBF 0%, #4A7FA7 100%);
+    border: none;
+    font-weight: 600;
+}
+
+.register-section .btn-success:hover {
+    background: linear-gradient(135deg, #4a96a8 0%, #3d6a94 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(84, 172, 191, 0.35);
+}
+
+/* Login Section */
+.login-section {
+    min-height: 100vh;
+    background: linear-gradient(
+        rgba(10, 25, 49, 0.65),
+        rgba(10, 25, 49, 0.65)
+    ),
+    url("/static/images/hero bg image.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    padding: 120px 20px 40px 20px;
+    display: flex;
+    align-items: center;
+}
+
+.login-section .card {
+    background: linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)),
+        url("/static/images/formbg.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-blend-mode: overlay;
+    border: 1px solid #54ACBF;
+    border-top: 4px solid #54ACBF;
+    border-radius: 1rem;
+    color: #1A1A1A;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+}
+
+.login-section .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.login-section .card-header {
+    background: linear-gradient(135deg, #54ACBF 0%, #4A7FA7 100%);
+    color: white;
+    border-radius: 13px 13px 0 0;
+}
+
+.login-section .btn-primary {
+    background: linear-gradient(135deg, #54ACBF 0%, #4A7FA7 100%);
+    border: none;
+    font-weight: 600;
+}
+
+.login-section .btn-primary:hover {
+    background: linear-gradient(135deg, #4a96a8 0%, #3d6a94 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(84, 172, 191, 0.35);
+}
+
 /* Navbar */
 .navbar-custom {
     background: transparent !important;
     border-bottom: none;
     backdrop-filter: blur(8px);
     box-shadow: none;
-    padding: 1rem 0 !important;
+    padding: 0.8rem 0 !important;
     position: fixed;
     top: 0;
     width: 100%;
@@ -114,6 +223,21 @@ h1, h2, h3, h4, h5, h6 {
 
 .navbar-brand:hover {
     color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.navbar-logo {
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    margin: 0 !important;
+}
+
+.form-card-logo {
+    width: 130px;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #54ACBF;
 }
 
 .navbar-nav .nav-link {
@@ -319,7 +443,7 @@ label {
 /* Responsive */
 @media (max-width: 768px) {
     .navbar-custom {
-        padding: 0.7rem 1rem;
+        padding: 0.5rem 1rem;
     }
 
     .profile-card {

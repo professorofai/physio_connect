@@ -13,8 +13,7 @@
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="/">
                 <!-- TODO: Edit logo by replacing static/logo.svg with your own file -->
-                <img src="{{ url_for('static', filename='logo.svg') }}" alt="Physio Connect Logo" width="32" height="32" class="me-2">
-                <span class="fw-bold">Physio Connect</span>
+                <img src="{{ url_for('static', filename='images/Physio.png') }}" alt="Physio Connect Logo" width="64" height="64" class="navbar-logo me-1">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -45,7 +44,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="flex-grow-1">
+    <main class="flex-grow-1 {% block main_class %}{% endblock %}">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <div class="container mt-3">

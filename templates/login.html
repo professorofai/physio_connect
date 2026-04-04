@@ -3,48 +3,58 @@
 {% block title %}Login - Physio Connect{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white text-center">
-                    <h4 class="mb-0">
-                        <i class="fas fa-sign-in-alt me-2"></i>Login to Your Account
-                    </h4>
-                </div>
-                <div class="card-body">
-                    <form method="POST" novalidate>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">
-                                <i class="fas fa-envelope me-1"></i>Email Address
-                            </label>
-                            <input type="email" class="form-control" id="email" name="email" required
-                                   placeholder="Enter your email address" data-bs-toggle="tooltip" title="Enter your registered email address">
-                            <div class="invalid-feedback">
-                                Please provide your email address.
+<div class="login-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8">
+                <div class="card shadow auth-card">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h4 class="mb-0">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login to Your Account
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row align-items-center gy-4">
+                            <div class="col-md-4 text-center">
+                                <img src="{{ url_for('static', filename='images/Physio.png') }}" alt="Physio Connect" width="130" height="130" class="form-card-logo mb-3">
+                                <p class="text-secondary mb-0">Secure login for patients and physiotherapists with one-click access.</p>
+                            </div>
+                            <div class="col-md-8">
+                                <form method="POST" novalidate>
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">
+                                            <i class="fas fa-envelope me-1"></i>Email Address
+                                        </label>
+                                        <input type="email" class="form-control" id="email" name="email" required
+                                               placeholder="Enter your email address" data-bs-toggle="tooltip" title="Enter your registered email address">
+                                        <div class="invalid-feedback">
+                                            Please provide your email address.
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label">
+                                            <i class="fas fa-lock me-1"></i>Password
+                                        </label>
+                                        <input type="password" class="form-control" id="password" name="password" required
+                                               placeholder="Enter your password" data-bs-toggle="tooltip" title="Enter your account password">
+                                        <div class="invalid-feedback">
+                                            Please provide your password.
+                                        </div>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary btn-lg">
+                                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">
-                                <i class="fas fa-lock me-1"></i>Password
-                            </label>
-                            <input type="password" class="form-control" id="password" name="password" required
-                                   placeholder="Enter your password" data-bs-toggle="tooltip" title="Enter your account password">
-                            <div class="invalid-feedback">
-                                Please provide your password.
-                            </div>
-                        </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="fas fa-sign-in-alt me-2"></i>Login
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                <div class="card-footer text-center">
-                    <p class="mb-0">Don't have an account?
-                        <a href="/register" class="text-primary fw-bold" data-bs-toggle="tooltip" title="Create a new account">Register here</a>
-                    </p>
+                    </div>
+                    <div class="card-footer text-center">
+                        <p class="mb-0">Don't have an account?
+                            <a href="/register" class="text-primary fw-bold" data-bs-toggle="tooltip" title="Create a new account">Register here</a>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
