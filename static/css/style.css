@@ -203,11 +203,11 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Navbar */
 .navbar-custom {
-    background: transparent !important;
-    border-bottom: none;
-    backdrop-filter: blur(8px);
-    box-shadow: none;
-    padding: 0.8rem 0 !important;
+    background: white !important;
+    border-bottom: 1px solid #E5E7EB;
+    backdrop-filter: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 0.4rem 0 !important;
     position: fixed;
     top: 0;
     width: 100%;
@@ -215,14 +215,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .navbar-brand {
-    color: white !important;
+    color: #0A1931 !important;
     font-weight: 700;
     letter-spacing: 0.08em;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: none;
 }
 
 .navbar-brand:hover {
-    color: rgba(255, 255, 255, 0.8) !important;
+    color: #54ACBF !important;
 }
 
 .navbar-logo {
@@ -230,6 +230,7 @@ h1, h2, h3, h4, h5, h6 {
     object-fit: cover;
     border: 2px solid rgba(255, 255, 255, 0.3);
     margin: 0 !important;
+    padding: 0 !important;
 }
 
 .form-card-logo {
@@ -241,15 +242,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .navbar-nav .nav-link {
-    color: white !important;
+    color: #0A1931 !important;
     font-weight: 600;
     padding: 0.8rem 1.1rem !important;
     transition: all 0.2s ease;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    text-shadow: none;
 }
 
 .navbar-nav .nav-link:hover {
-    color: rgba(255, 255, 255, 0.8) !important;
+    color: #54ACBF !important;
     text-decoration: none !important;
     transform: scale(1.1);
 }
@@ -258,7 +259,7 @@ h1, h2, h3, h4, h5, h6 {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
-    color: white !important;
+    color: #0A1931 !important;
     transition: all 0.2s ease;
 }
 
@@ -443,7 +444,7 @@ label {
 /* Responsive */
 @media (max-width: 768px) {
     .navbar-custom {
-        padding: 0.5rem 1rem;
+        padding: 0.4rem 1rem;
     }
 
     .profile-card {

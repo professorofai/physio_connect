@@ -1,0 +1,20 @@
+---
+description: Dedicated Flask healthcare project rules
+alwaysApply: true
+---
+
+# Flask Project Rules
+
+Always follow Flask best practices.
+
+- Use Blueprint architecture.
+- Keep routes modular.
+- Separate models, routes, and templates.
+- Use Flask-SQLAlchemy for database access.
+- Use Flask-Login for authentication.
+- Use clean Jinja templates.
+- Use reusable components.
+- Keep CSS in the static folder.
+- Never break existing routes.
+- Maintain a healthcare project production structure.
+- Follow secure coding practices for patient data.

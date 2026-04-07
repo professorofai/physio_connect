@@ -1,10 +1,7 @@
-#!/Users/akshatjauhari/Desktop/Coding/PHYSIOTHERAPIST/physio_connect/venv/bin/python3
-import sys
 import os
 from datetime import datetime, timedelta
 import random
 import string
-sys.path.insert(0, '/Users/akshatjauhari/Desktop/Coding/PHYSIOTHERAPIST/physio_connect/venv/lib/python3.14/site-packages')
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -13,42 +10,39 @@ from flask_sqlalchemy import SQLAlchemy
 
 import smtplib
 from email.message import EmailMessage
+from config import Config
 
-app = Flask(__name__, instance_relative_config=True)
-app.secret_key = "supersecretkey"
+db = SQLAlchemy()
 
-# Configure upload folder
-UPLOAD_FOLDER = 'static/uploads'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+def create_app():
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_object(Config)
+    db.init_app(app)
 
-# Ensure upload directory exists
-import os
-os.makedirs(os.path.join(app.root_path, UPLOAD_FOLDER), exist_ok=True)
+    # Ensure upload directory exists
+    os.makedirs(os.path.join(app.root_path, app.config["UPLOAD_FOLDER"]), exist_ok=True)
 
-# Email config
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'jauhariakshat21@gmail.com'
-EMAIL_HOST_PASSWORD = 'oqsy puen xbwz pqlw'
-EMAIL_FROM = 'jauhariakshat21@gmail.com'
+    return app
 
+app = create_app()
 
 def send_registration_email(to_email, username):
-    if not EMAIL_HOST_USER or not EMAIL_HOST_PASSWORD:
+    email_host_user = app.config["EMAIL_HOST_USER"]
+    email_host_password = app.config["EMAIL_HOST_PASSWORD"]
+    if not email_host_user or not email_host_password:
         app.logger.warning('Email credentials not configured; skipping email send.')
         return False
 
     msg = EmailMessage()
     msg['Subject'] = 'Your Physio Connect Registration is Complete'
-    msg['From'] = EMAIL_FROM
+    msg['From'] = app.config["EMAIL_FROM"]
     msg['To'] = to_email
     msg.set_content(f"Dear {username},\n\nThank you for registering with Physio Connect! Your account is now active and you can access your dashboard at http://localhost:5000/dashboard\n\nBest regards,\nPhysio Connect Team")
 
     try:
-        with smtplib.SMTP(EMAIL_HOST, EMAIL_PORT) as smtp:
+        with smtplib.SMTP(app.config["EMAIL_HOST"], app.config["EMAIL_PORT"]) as smtp:
             smtp.starttls()
-            smtp.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
+            smtp.login(email_host_user, email_host_password)
             smtp.send_message(msg)
         return True
     except Exception as e:
@@ -61,7 +55,9 @@ def generate_otp():
 
 def send_email_otp(email, otp_code):
     """Send OTP via email with HTML template"""
-    if not EMAIL_HOST_USER or not EMAIL_HOST_PASSWORD:
+    email_host_user = app.config["EMAIL_HOST_USER"]
+    email_host_password = app.config["EMAIL_HOST_PASSWORD"]
+    if not email_host_user or not email_host_password:
         app.logger.warning('Email credentials not configured; skipping email send.')
         return False
 
@@ -70,7 +66,7 @@ def send_email_otp(email, otp_code):
 
     msg = EmailMessage()
     msg['Subject'] = 'Your Physio Connect Verification Code'
-    msg['From'] = EMAIL_FROM
+    msg['From'] = app.config["EMAIL_FROM"]
     msg['To'] = email
 
     # Set both plain text and HTML content
@@ -78,9 +74,9 @@ def send_email_otp(email, otp_code):
     msg.add_alternative(html_content, subtype='html')
 
     try:
-        with smtplib.SMTP(EMAIL_HOST, EMAIL_PORT) as smtp:
+        with smtplib.SMTP(app.config["EMAIL_HOST"], app.config["EMAIL_PORT"]) as smtp:
             smtp.starttls()
-            smtp.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
+            smtp.login(email_host_user, email_host_password)
             smtp.send_message(msg)
         return True
     except Exception as e:
@@ -129,11 +125,7 @@ def verify_otp(email, otp_code):
 
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-# Database config
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
-db = SQLAlchemy(app)
+           filename.rsplit('.', 1)[1].lower() in app.config["ALLOWED_EXTENSIONS"]
 
 # User Model
 class User(db.Model):
