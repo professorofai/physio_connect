@@ -5,7 +5,7 @@ import string
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from flask import Flask, render_template, request, session, redirect, flash
+from flask import Flask, render_template, request, session, redirect, flash, abort
 from flask_sqlalchemy import SQLAlchemy
 
 import smtplib
@@ -163,10 +163,35 @@ class Appointment(db.Model):
     appointment_date = db.Column(db.String(50))
     status = db.Column(db.String(20), default="pending")
 
+
+# Service detail pages (placeholders — replace with full content when ready)
+SERVICE_SLUGS = {
+    "pain-relief": "Pain Relief Physiotherapy",
+    "sports-injury": "Sports Injury Rehab",
+    "online-consultation": "Online Consultation",
+    "home-visit": "Home Visit Physio",
+    "posture-correction": "Posture Correction",
+    "ai-assessment": "AI Physio Assessment",
+}
+
+
 # Home route
 @app.route("/")
 def home():
     return render_template("home.html")
+
+
+@app.route("/services/<slug>")
+def service_detail(slug):
+    title = SERVICE_SLUGS.get(slug)
+    if not title:
+        abort(404)
+    return render_template(
+        "service_placeholder.html",
+        service_title=title,
+        service_slug=slug,
+    )
+
 
 # Register route
 @app.route("/register", methods=["GET", "POST"])

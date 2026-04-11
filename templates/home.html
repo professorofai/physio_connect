@@ -2,8 +2,15 @@
 
 {% block title %}Home - Physio Connect{% endblock %}
 
+{% block body_class %}page-home{% endblock %}
+{% block navbar_variant %}navbar-dark{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/services.css') }}">
+{% endblock %}
+
 {% block content %}
-<div class="hero-section bg-primary text-white py-5">
+<div class="hero-section text-white">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6">
@@ -28,37 +35,7 @@
     </div>
 </div>
 
-<div class="container my-5">
-    <div class="row">
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center">
-                <div class="card-body">
-                    <i class="fas fa-calendar-check fa-3x text-primary mb-3"></i>
-                    <h5 class="card-title">Easy Booking</h5>
-                    <p class="card-text">Schedule appointments with just a few clicks. Choose your preferred time and physiotherapist.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center">
-                <div class="card-body">
-                    <i class="fas fa-user-md fa-3x text-success mb-3"></i>
-                    <h5 class="card-title">Expert Care</h5>
-                    <p class="card-text">Connect with certified physiotherapists who specialize in various treatments and rehabilitation.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center">
-                <div class="card-body">
-                    <i class="fas fa-clock fa-3x text-info mb-3"></i>
-                    <h5 class="card-title">Flexible Hours</h5>
-                    <p class="card-text">Book appointments that fit your schedule, including evenings and weekends.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+{% include 'partials/services_section.html' %}
 
 <div class="bg-light py-5">
     <div class="container text-center">

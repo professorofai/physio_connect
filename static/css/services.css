@@ -1,0 +1,305 @@
+/* Our Services — homepage section (Physio Connect design system) */
+
+.services-section {
+    background: linear-gradient(180deg, #f5f9fc 0%, #eef4fa 50%, #f5f9fc 100%);
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
+}
+
+.services-section__eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #4A7FA7;
+    margin-bottom: 0.65rem;
+}
+
+.services-section__title {
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    font-weight: 800;
+    color: #0A1931;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+}
+
+.services-section__lead {
+    max-width: 36rem;
+    margin-left: auto;
+    margin-right: auto;
+    color: #5a6b7c;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+/* Card shell */
+.service-card {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border-radius: var(--radius, 14px);
+    border: 1px solid rgba(84, 172, 191, 0.22);
+    box-shadow: 0 4px 20px rgba(10, 25, 49, 0.06);
+    overflow: hidden;
+    transition:
+        transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 0.25s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(10, 25, 49, 0.12);
+    border-color: rgba(84, 172, 191, 0.45);
+}
+
+/* Decorative header band — base; themes override */
+.service-card__art {
+    flex-shrink: 0;
+    width: 100%;
+}
+
+.service-card__body {
+    position: relative;
+    padding: 1.5rem 1.5rem 1.4rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.service-card__eyebrow {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #4A7FA7;
+    margin: 0 0 0.65rem;
+    line-height: 1.2;
+}
+
+.service-card__title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #0A1931;
+    margin-bottom: 0.5rem;
+    line-height: 1.35;
+}
+
+.service-card__text {
+    font-size: 0.9375rem;
+    color: #5a6b7c;
+    line-height: 1.55;
+    margin-bottom: 1.35rem;
+    flex-grow: 1;
+}
+
+.service-card .btn {
+    margin-top: auto;
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 0.45rem 1.1rem;
+    box-shadow: 0 6px 16px rgba(74, 127, 167, 0.28);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.service-card .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(74, 127, 167, 0.38);
+}
+
+.service-card .btn:focus-visible {
+    outline: 2px solid #54ACBF;
+    outline-offset: 2px;
+}
+
+/* --- Theme: Pain relief — soft glow + rich teal bar --- */
+.service-card--relief .service-card__art {
+    height: 5px;
+    background: linear-gradient(90deg, #2a5f6e 0%, #54ACBF 40%, #61b2ef 100%);
+    box-shadow: 0 0 20px rgba(84, 172, 191, 0.45);
+}
+
+.service-card--relief .service-card__body {
+    background:
+        radial-gradient(ellipse 130% 90% at 0% 100%, rgba(84, 172, 191, 0.14), transparent 58%),
+        #ffffff;
+}
+
+.service-card--relief:hover .service-card__body {
+    background:
+        radial-gradient(ellipse 130% 90% at 0% 100%, rgba(84, 172, 191, 0.2), transparent 58%),
+        #ffffff;
+}
+
+/* --- Theme: Sports — angled split band + motion streaks --- */
+.service-card--sports .service-card__art {
+    position: relative;
+    height: 3rem;
+    background:
+        repeating-linear-gradient(
+            -11deg,
+            rgba(255, 255, 255, 0) 0,
+            rgba(255, 255, 255, 0) 8px,
+            rgba(255, 255, 255, 0.1) 8px,
+            rgba(255, 255, 255, 0.1) 9px
+        ),
+        linear-gradient(
+            118deg,
+            #061525 0%,
+            #0A1931 26%,
+            #1b4a63 26%,
+            #356888 52%,
+            #54ACBF 78%,
+            #8fdcf5 100%
+        );
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.service-card--sports .service-card__art::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    pointer-events: none;
+}
+
+.service-card--sports .service-card__body {
+    padding-top: 1.4rem;
+    background:
+        linear-gradient(212deg, rgba(84, 172, 191, 0.14) 0%, rgba(255, 255, 255, 0) 48%),
+        linear-gradient(0deg, rgba(10, 25, 49, 0.035) 0%, rgba(255, 255, 255, 0) 22%),
+        #ffffff;
+}
+
+.service-card--sports .service-card__eyebrow {
+    color: #25607a;
+    letter-spacing: 0.15em;
+}
+
+.service-card--sports:hover .service-card__art {
+    filter: brightness(1.06);
+}
+
+/* --- Theme: Online — glow line + cool side rail --- */
+.service-card--online .service-card__art {
+    height: 4px;
+    background: linear-gradient(90deg, transparent 0%, #61b2ef 35%, #54ACBF 65%, transparent 100%);
+    box-shadow: 0 0 16px rgba(97, 178, 239, 0.5);
+}
+
+.service-card--online .service-card__body {
+    border-left: 3px solid rgba(97, 178, 239, 0.45);
+    margin-left: 0;
+    padding-left: calc(1.5rem - 3px);
+    background: linear-gradient(135deg, rgba(97, 178, 239, 0.07) 0%, rgba(255, 255, 255, 0.92) 45%, #ffffff 100%);
+}
+
+.service-card--online .service-card__eyebrow {
+    color: #3d7a9e;
+}
+
+/* --- Theme: Home visit — stripe band + warm wash --- */
+.service-card--home .service-card__art {
+    height: 10px;
+    background: repeating-linear-gradient(
+        -65deg,
+        #54ACBF,
+        #54ACBF 6px,
+        rgba(255, 255, 255, 0.55) 6px,
+        rgba(255, 255, 255, 0.55) 10px,
+        #4A7FA7 10px,
+        #4A7FA7 16px
+    );
+    opacity: 0.95;
+}
+
+.service-card--home .service-card__body {
+    background: linear-gradient(180deg, rgba(255, 252, 248, 0.85) 0%, #ffffff 36%);
+}
+
+.service-card--home .service-card__eyebrow {
+    color: #5a7a8f;
+}
+
+/* --- Theme: Posture — photo + soft accent bar --- */
+.service-card--posture .service-card__art {
+    height: 5px;
+    background: linear-gradient(90deg, #c97b63 0%, #54ACBF 50%, #4A7FA7 100%);
+    box-shadow: 0 0 14px rgba(84, 172, 191, 0.35);
+}
+
+.service-card--posture .service-card__body--photo {
+    min-height: 15rem;
+    background-image:
+        linear-gradient(
+            165deg,
+            rgba(255, 255, 255, 0.78) 0%,
+            rgba(245, 249, 252, 0.62) 45%,
+            rgba(255, 255, 255, 0.52) 100%
+        ),
+        var(--service-card-bg-image);
+    background-size: cover, cover;
+    background-position: center center, center 30%;
+    background-repeat: no-repeat;
+}
+
+.service-card--posture:hover .service-card__body--photo {
+    background-image:
+        linear-gradient(
+            165deg,
+            rgba(255, 255, 255, 0.72) 0%,
+            rgba(238, 244, 250, 0.56) 50%,
+            rgba(255, 255, 255, 0.46) 100%
+        ),
+        var(--service-card-bg-image);
+}
+
+.service-card__eyebrow--on-photo {
+    padding: 0.2rem 0.55rem;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    color: #3d6a94 !important;
+}
+
+/* --- Theme: AI — mesh bar + subtle grid field --- */
+.service-card--ai .service-card__art {
+    height: 6px;
+    background: linear-gradient(90deg, #4A7FA7 0%, #61b2ef 35%, #8b7fd8 70%, #54ACBF 100%);
+    background-size: 200% 100%;
+    box-shadow: 0 0 18px rgba(139, 127, 216, 0.25);
+}
+
+.service-card--ai .service-card__body {
+    background-color: #f8fafc;
+    background-image: radial-gradient(rgba(84, 172, 191, 0.2) 1.2px, transparent 1.2px);
+    background-size: 16px 16px;
+}
+
+.service-card--ai .service-card__eyebrow {
+    color: #6b5b95;
+}
+
+@media (max-width: 767.98px) {
+    .services-section {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+
+    .service-card__body {
+        padding: 1.35rem 1.25rem 1.2rem;
+    }
+
+    .service-card--online .service-card__body {
+        padding-left: calc(1.25rem - 3px);
+    }
+}

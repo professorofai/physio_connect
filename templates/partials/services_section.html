@@ -1,0 +1,86 @@
+{# Our Services — reusable homepage section. Link hrefs point to future detail routes. #}
+<section class="services-section" aria-labelledby="services-heading">
+    <div class="container">
+        <header class="text-center mb-5 pb-md-1">
+            <p class="services-section__eyebrow mb-0">Clinical care &amp; convenience</p>
+            <h2 id="services-heading" class="services-section__title">Our Services</h2>
+            <p class="services-section__lead mb-0">
+                Evidence-based physiotherapy tailored to your goals—from pain relief to performance and prevention.
+            </p>
+        </header>
+
+        <div class="row g-4 justify-content-center">
+            <div class="col-12 col-md-6 col-lg-4 d-flex">
+                <article class="service-card service-card--relief w-100">
+                    <div class="service-card__art" aria-hidden="true"></div>
+                    <div class="service-card__body">
+                        <p class="service-card__eyebrow">Recovery</p>
+                        <h3 class="service-card__title">Pain Relief Physiotherapy</h3>
+                        <p class="service-card__text">Targeted treatment plans to reduce pain and restore comfortable movement.</p>
+                        <a href="{{ url_for('service_detail', slug='pain-relief') }}" class="btn btn-primary btn-sm">Learn More</a>
+                    </div>
+                </article>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 d-flex">
+                <article class="service-card service-card--sports w-100">
+                    <div class="service-card__art" aria-hidden="true"></div>
+                    <div class="service-card__body">
+                        <p class="service-card__eyebrow">Performance</p>
+                        <h3 class="service-card__title">Sports Injury Rehab</h3>
+                        <p class="service-card__text">Return-to-sport programs built around your timeline and training load.</p>
+                        <a href="{{ url_for('service_detail', slug='sports-injury') }}" class="btn btn-primary btn-sm">Learn More</a>
+                    </div>
+                </article>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 d-flex">
+                <article class="service-card service-card--online w-100">
+                    <div class="service-card__art" aria-hidden="true"></div>
+                    <div class="service-card__body">
+                        <p class="service-card__eyebrow">Virtual care</p>
+                        <h3 class="service-card__title">Online Consultation</h3>
+                        <p class="service-card__text">Expert guidance from home with secure video sessions and follow-up care.</p>
+                        <a href="{{ url_for('service_detail', slug='online-consultation') }}" class="btn btn-primary btn-sm">Learn More</a>
+                    </div>
+                </article>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 d-flex">
+                <article class="service-card service-card--home w-100">
+                    <div class="service-card__art" aria-hidden="true"></div>
+                    <div class="service-card__body">
+                        <p class="service-card__eyebrow">At your door</p>
+                        <h3 class="service-card__title">Home Visit Physio</h3>
+                        <p class="service-card__text">Licensed therapists at your door when clinic visits aren’t practical.</p>
+                        <a href="{{ url_for('service_detail', slug='home-visit') }}" class="btn btn-primary btn-sm">Learn More</a>
+                    </div>
+                </article>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 d-flex">
+                <article class="service-card service-card--posture w-100" style="--service-card-bg-image: url('{{ url_for('static', filename='images/posture corr.jpg') }}');">
+                    <div class="service-card__art" aria-hidden="true"></div>
+                    <div class="service-card__body service-card__body--photo">
+                        <p class="service-card__eyebrow service-card__eyebrow--on-photo">Wellness</p>
+                        <h3 class="service-card__title">Posture Correction</h3>
+                        <p class="service-card__text">Ergonomics, strengthening, and habits to protect your spine long term.</p>
+                        <a href="{{ url_for('service_detail', slug='posture-correction') }}" class="btn btn-primary btn-sm">Learn More</a>
+                    </div>
+                </article>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 d-flex">
+                <article class="service-card service-card--ai w-100">
+                    <div class="service-card__art" aria-hidden="true"></div>
+                    <div class="service-card__body">
+                        <p class="service-card__eyebrow">Innovation</p>
+                        <h3 class="service-card__title">AI Physio Assessment</h3>
+                        <p class="service-card__text">Smart screening tools to triage symptoms and prep your first visit.</p>
+                        <a href="{{ url_for('service_detail', slug='ai-assessment') }}" class="btn btn-primary btn-sm">Learn More</a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}{{ service_title }} — Physio Connect{% endblock %}
+
+{% block content %}
+<div class="container py-5 my-4" style="max-width: 640px;">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ service_title }}</li>
+        </ol>
+    </nav>
+    <div class="card p-4 p-md-5 text-center">
+        <div class="mb-3 text-primary">
+            <i class="fas fa-stethoscope fa-3x" aria-hidden="true"></i>
+        </div>
+        <h1 class="h3 fw-bold card-title mb-3">{{ service_title }}</h1>
+        <p class="text-muted mb-4">We’re preparing a detailed page for this service. Check back soon or book a consultation to get started today.</p>
+        <div class="d-flex flex-wrap gap-2 justify-content-center">
+            <a href="{{ url_for('home') }}#services-heading" class="btn btn-outline-secondary btn-sm">Back to services</a>
+            <a href="{{ url_for('physios') }}" class="btn btn-primary btn-sm">Find a physiotherapist</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
