@@ -11,10 +11,10 @@
 
         <div class="row g-4 justify-content-center">
             <div class="col-12 col-md-6 col-lg-4 d-flex">
-                <article class="service-card service-card--relief w-100">
+                <article class="service-card service-card--relief w-100" style="--service-card-bg-image: url('{{ url_for('static', filename='images/pain relief.jpg') }}');">
                     <div class="service-card__art" aria-hidden="true"></div>
-                    <div class="service-card__body">
-                        <p class="service-card__eyebrow">Recovery</p>
+                    <div class="service-card__body service-card__body--photo">
+                        <p class="service-card__eyebrow service-card__eyebrow--on-photo">Recovery</p>
                         <h3 class="service-card__title">Pain Relief Physiotherapy</h3>
                         <p class="service-card__text">Targeted treatment plans to reduce pain and restore comfortable movement.</p>
                         <a href="{{ url_for('service_detail', slug='pain-relief') }}" class="btn btn-primary btn-sm">Learn More</a>

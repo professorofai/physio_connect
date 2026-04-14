@@ -116,23 +116,11 @@
     outline-offset: 2px;
 }
 
-/* --- Theme: Pain relief — soft glow + rich teal bar --- */
+/* --- Theme: Pain relief — photo body + teal accent bar --- */
 .service-card--relief .service-card__art {
     height: 5px;
     background: linear-gradient(90deg, #2a5f6e 0%, #54ACBF 40%, #61b2ef 100%);
     box-shadow: 0 0 20px rgba(84, 172, 191, 0.45);
-}
-
-.service-card--relief .service-card__body {
-    background:
-        radial-gradient(ellipse 130% 90% at 0% 100%, rgba(84, 172, 191, 0.14), transparent 58%),
-        #ffffff;
-}
-
-.service-card--relief:hover .service-card__body {
-    background:
-        radial-gradient(ellipse 130% 90% at 0% 100%, rgba(84, 172, 191, 0.2), transparent 58%),
-        #ffffff;
 }
 
 /* --- Theme: Sports — angled split band + motion streaks --- */
@@ -235,6 +223,8 @@
     box-shadow: 0 0 14px rgba(84, 172, 191, 0.35);
 }
 
+/* Photo-backed card bodies (pain relief, posture) — URL via --service-card-bg-image */
+.service-card--relief .service-card__body--photo,
 .service-card--posture .service-card__body--photo {
     min-height: 15rem;
     background-image:
@@ -250,6 +240,7 @@
     background-repeat: no-repeat;
 }
 
+.service-card--relief:hover .service-card__body--photo,
 .service-card--posture:hover .service-card__body--photo {
     background-image:
         linear-gradient(
