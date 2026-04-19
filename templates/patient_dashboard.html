@@ -1,14 +1,130 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Physio Connect Patient Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background: #f8fafc; color: #1e293b; }
+    .dashboard { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 260px; background: white; border-right: 1px solid #e2e8f0;
+      padding: 24px; position: sticky; top: 0; height: 100vh;
+    }
+    .sidebar h1 { color: #0284c7; font-size: 28px; }
+    .sidebar p { color: #64748b; margin-top: 4px; }
+    .nav-item {
+      padding: 14px 16px; border-radius: 18px; margin-top: 12px;
+      cursor: pointer; transition: 0.3s;
+    }
+    .nav-item:hover { background: #e0f2fe; }
 
-{% block content %}
-    <h1>Patient Dashboard 🧑‍⚕️</h1>
-    <p>Welcome {{ email }}</p>
+    .main { flex: 1; padding: 40px; }
+    .hero {
+      background: linear-gradient(90deg, #0284c7, #06b6d4);
+      color: white; padding: 36px; border-radius: 28px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+    .hero-buttons { margin-top: 20px; display: flex; gap: 12px; }
+    .btn {
+      padding: 12px 20px; border-radius: 16px; border: none;
+      cursor: pointer; font-weight: bold;
+    }
+    .btn-primary { background: white; color: #0284c7; }
+    .btn-secondary { background: rgba(255,255,255,0.2); color: white; }
 
-    <ul>
-        <li>Book Appointment</li>
-        <li>View Prescriptions</li>
-        <li>View Exercises</li>
-    </ul>
-    <a href="/physios" class="btn btn-primary">Browse Physiotherapists</a>
-    <a href="/logout" class="btn btn-secondary">Logout</a>
-{% endblock %}
+    .stats, .features, .bottom-panels {
+      display: grid; gap: 20px; margin-top: 30px;
+    }
+    .stats { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+    .features { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .bottom-panels { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+
+    .card {
+      background: white; border: 1px solid #e2e8f0; border-radius: 24px;
+      padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      transition: 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+    }
+    .feature-icon { font-size: 40px; }
+    .feature-title { font-size: 22px; margin-top: 14px; }
+    .muted { color: #64748b; margin-top: 8px; line-height: 1.6; }
+    ul { margin-top: 14px; padding-left: 18px; }
+    li { margin-bottom: 10px; color: #475569; }
+
+    @media (max-width: 768px) {
+      .dashboard { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; position: relative; }
+      .main { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <h1>Physio Connect</h1>
+      <p>Patient Dashboard</p>
+      <div class="nav-item">Dashboard</div>
+      <div class="nav-item">AI Assessment</div>
+      <div class="nav-item">Find Physio</div>
+      <div class="nav-item">My Exercises</div>
+      <div class="nav-item">Appointments</div>
+      <div class="nav-item">Progress</div>
+      <div class="nav-item">Reports</div>
+      <div class="nav-item">Messages</div>
+      <div class="nav-item">Settings</div>
+    </aside>
+
+    <main class="main">
+      <section class="hero">
+        <h2>Welcome back, Akshat 👋</h2>
+        <p style="margin-top:8px;">Let’s continue your knee recovery journey today.</p>
+        <div class="hero-buttons">
+          <button class="btn btn-primary">Start AI Test</button>
+          <button class="btn btn-secondary">Book Physio</button>
+        </div>
+      </section>
+
+      <section class="stats">
+        <div class="card"><strong>Recovery Score</strong><p class="muted">84/100</p></div>
+        <div class="card"><strong>Pain Level</strong><p class="muted">3/10</p></div>
+        <div class="card"><strong>Exercise Streak</strong><p class="muted">12 days</p></div>
+        <div class="card"><strong>Next Session</strong><p class="muted">5:00 PM</p></div>
+      </section>
+
+      <section class="features">
+        <div class="card"><div class="feature-icon">🧠</div><div class="feature-title">AI Pain Test</div><p class="muted">Smart symptom assessment with pain scale and body map.</p></div>
+        <div class="card"><div class="feature-icon">🔍</div><div class="feature-title">Find Physio</div><p class="muted">Search by specialty, home visit, ratings, and availability.</p></div>
+        <div class="card"><div class="feature-icon">📅</div><div class="feature-title">Appointments</div><p class="muted">Manage sessions, join calls, and reschedule visits.</p></div>
+        <div class="card"><div class="feature-icon">🏋️</div><div class="feature-title">Recovery Plan</div><p class="muted">Daily exercises, sets, reps, and streak tracking.</p></div>
+        <div class="card"><div class="feature-icon">📈</div><div class="feature-title">Progress Tracker</div><p class="muted">Track pain, ROM, steps, sleep, and score.</p></div>
+        <div class="card"><div class="feature-icon">💬</div><div class="feature-title">AI + Physio Chat</div><p class="muted">Talk to AI assistant or assigned physiotherapist.</p></div>
+      </section>
+
+      <section class="bottom-panels">
+        <div class="card">
+          <h3>Today’s Recovery Tasks</h3>
+          <ul>
+            <li>Quad strengthening — 3 x 12</li>
+            <li>Hamstring stretch — 30 sec x 3</li>
+            <li>15 min walk challenge</li>
+            <li>Hydration goal — 2L</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>AI Risk Alerts</h3>
+          <ul>
+            <li>Mild stiffness trend detected</li>
+            <li>Sleep score dropped this week</li>
+            <li>Great progress: pain reduced 20%</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
