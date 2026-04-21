@@ -19,6 +19,10 @@ A Flask-based healthcare platform for booking physiotherapy appointments with ph
 ## Status
 ✅ Complete - All features implemented
 
+## Upcoming
+- Building services model
+- creating a Assitant bot
+
 ## Configuration
 
 ### 1. Twilio SMS Setup (Required for Phone Verification)
