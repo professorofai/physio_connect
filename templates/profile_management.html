@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Profile Management{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="card shadow-sm border-0 rounded-4 p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h2 class="mb-1">Profile Management</h2>
+            <p class="text-muted mb-0">Keep your personal details, password, and professional information up to date.</p>
+          </div>
+          <a href="/dashboard" class="btn btn-outline-primary">Back to Dashboard</a>
+        </div>
+
+        {% if role == 'patient' %}
+        <div class="mb-5">
+          <h4 class="mb-3">Patient Profile</h4>
+          <form method="post" enctype="multipart/form-data">
+            {{ patient_form.hidden_tag() }}
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Full Name</label>
+                {{ patient_form.name(class_='form-control', value=user.name) }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Phone Number</label>
+                {{ patient_form.phone_number(class_='form-control', value=user.phone_number) }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">City</label>
+                {{ patient_form.city(class_='form-control', value=user.city) }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Profile Picture</label>
+                {{ patient_form.profile_picture(class_='form-control') }}
+              </div>
+            </div>
+            <div class="mt-3">
+              {{ patient_form.submit(class_='btn btn-primary') }}
+            </div>
+          </form>
+        </div>
+        {% endif %}
+
+        <div class="mb-5">
+          <h4 class="mb-3">Password</h4>
+          <form method="post" enctype="multipart/form-data">
+            {{ password_form.hidden_tag() }}
+            <div class="row g-3">
+              <div class="col-md-12">
+                <label class="form-label">Current Password</label>
+                {{ password_form.current_password(class_='form-control') }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">New Password</label>
+                {{ password_form.new_password(class_='form-control') }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Confirm New Password</label>
+                {{ password_form.confirm_password(class_='form-control') }}
+              </div>
+            </div>
+            <div class="mt-3">
+              {{ password_form.submit(class_='btn btn-outline-primary') }}
+            </div>
+          </form>
+        </div>
+
+        {% if role == 'physiotherapist' %}
+        <div>
+          <h4 class="mb-3">Physiotherapist Profile</h4>
+          <form method="post" enctype="multipart/form-data">
+            {{ physio_form.hidden_tag() }}
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Clinic Name</label>
+                {{ physio_form.clinic_name(class_='form-control', value=profile.clinic_name if profile else '') }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Location</label>
+                {{ physio_form.location(class_='form-control', value=profile.location if profile else '') }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Specialization</label>
+                {{ physio_form.specialization(class_='form-control', value=profile.specialization if profile else '') }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Experience (years)</label>
+                {{ physio_form.experience(class_='form-control', value=profile.experience if profile else '') }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Profile Image</label>
+                {{ physio_form.profile_picture(class_='form-control') }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Certificates</label>
+                {{ physio_form.certificates(class_='form-control') }}
+              </div>
+            </div>
+            <div class="mt-3">
+              {{ physio_form.submit(class_='btn btn-primary') }}
+            </div>
+          </form>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card shadow-sm border-0 rounded-4 p-4">
+        <h5 class="mb-3">Current Details</h5>
+        <p class="mb-2"><strong>Name:</strong> {{ user.name }}</p>
+        <p class="mb-2"><strong>Email:</strong> {{ user.email }}</p>
+        <p class="mb-2"><strong>Phone:</strong> {{ user.phone_number }}</p>
+        <p class="mb-2"><strong>City:</strong> {{ user.city }}</p>
+        {% if profile %}
+        <p class="mb-2"><strong>Clinic:</strong> {{ profile.clinic_name }}</p>
+        <p class="mb-2"><strong>Specialization:</strong> {{ profile.specialization }}</p>
+        <p class="mb-2"><strong>Experience:</strong> {{ profile.experience }} years</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
