@@ -64,6 +64,10 @@ def ensure_database_schema():
             _add_column_if_missing(connection, "appointment", "duration_minutes INTEGER DEFAULT 30")
         if not _table_has_column(connection, "appointment", "updated_at"):
             _add_column_if_missing(connection, "appointment", "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP")
+        if not _table_has_column(connection, "appointment", "patient_note"):
+            _add_column_if_missing(connection, "appointment", "patient_note TEXT")
+        if not _table_has_column(connection, "appointment", "physio_note"):
+            _add_column_if_missing(connection, "appointment", "physio_note TEXT")
 
         if not _table_has_column(connection, "otp_verification", "updated_at"):
             _add_column_if_missing(connection, "otp_verification", "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP")
@@ -82,6 +86,7 @@ def ensure_database_schema():
                     city VARCHAR(100) NOT NULL,
                     password VARCHAR(255) NOT NULL,
                     role VARCHAR(20) NOT NULL DEFAULT 'patient',
+                    profile_picture VARCHAR(200),
                     is_verified BOOLEAN NOT NULL DEFAULT 0,
                     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -91,8 +96,8 @@ def ensure_database_schema():
                 )
                 """,
                 """
-                INSERT INTO user (id, name, email, phone_number, city, password, role, is_verified, created_at, updated_at)
-                SELECT id, name, COALESCE(email, ''), COALESCE(phone_number, ''), COALESCE(city, ''), password, COALESCE(role, 'patient'), COALESCE(is_verified, 0), COALESCE(created_at, CURRENT_TIMESTAMP), COALESCE(updated_at, CURRENT_TIMESTAMP) FROM user_backup
+                INSERT INTO user (id, name, email, phone_number, city, password, role, profile_picture, is_verified, created_at, updated_at)
+                SELECT id, name, COALESCE(email, ''), COALESCE(phone_number, ''), COALESCE(city, ''), password, COALESCE(role, 'patient'), profile_picture, COALESCE(is_verified, 0), COALESCE(created_at, CURRENT_TIMESTAMP), COALESCE(updated_at, CURRENT_TIMESTAMP) FROM user_backup
                 """,
             )
 
@@ -108,6 +113,7 @@ def ensure_database_schema():
                     specialization VARCHAR(200) NOT NULL,
                     experience INTEGER DEFAULT 0,
                     profile_picture VARCHAR(200),
+                    certificates VARCHAR(500),
                     user_id INTEGER NOT NULL,
                     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -117,8 +123,8 @@ def ensure_database_schema():
                 )
                 """,
                 """
-                INSERT INTO physio_profile (id, clinic_name, location, specialization, experience, profile_picture, user_id, created_at, updated_at)
-                SELECT id, clinic_name, location, specialization, experience, profile_picture, user_id, COALESCE(created_at, CURRENT_TIMESTAMP), COALESCE(updated_at, CURRENT_TIMESTAMP) FROM physio_profile_backup
+                INSERT INTO physio_profile (id, clinic_name, location, specialization, experience, profile_picture, certificates, user_id, created_at, updated_at)
+                SELECT id, clinic_name, location, specialization, experience, profile_picture, certificates, user_id, COALESCE(created_at, CURRENT_TIMESTAMP), COALESCE(updated_at, CURRENT_TIMESTAMP) FROM physio_profile_backup
                 """,
             )
 

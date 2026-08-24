@@ -34,18 +34,6 @@ class User(db.Model):
         back_populates="patient",
         cascade="all, delete-orphan",
     )
-    physio_appointments = db.relationship(
-        "Appointment",
-        foreign_keys="Appointment.physio_id",
-        back_populates="physio",
-        cascade="all, delete-orphan",
-    )
-    otp_verifications = db.relationship(
-        "OTPVerification",
-        back_populates="user",
-        primaryjoin="User.email == OTPVerification.email",
-        viewonly=True,
-    )
 
 
 class OTPVerification(db.Model):
@@ -58,14 +46,6 @@ class OTPVerification(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     expires_at = db.Column(db.DateTime, nullable=False)
     is_used = db.Column(db.Boolean, default=False, nullable=False)
-
-    user = db.relationship(
-        "User",
-        back_populates="otp_verifications",
-        primaryjoin="User.email == OTPVerification.email",
-        viewonly=True,
-    )
-
 
 class PhysioProfile(db.Model):
     __tablename__ = "physio_profile"
@@ -99,27 +79,64 @@ class Appointment(db.Model):
     __tablename__ = "appointment"
 
     id = db.Column(db.Integer, primary_key=True)
+
     patient_id = db.Column(
         db.Integer,
         db.ForeignKey("user.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
+
     physio_id = db.Column(
         db.Integer,
         db.ForeignKey("physio_profile.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
-    appointment_date = db.Column(db.String(50), nullable=False)
-    appointment_time = db.Column(db.Time)
-    duration_minutes = db.Column(db.Integer, default=30, nullable=False)
-    status = db.Column(db.String(20), default="pending", nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
-    patient = db.relationship("User", foreign_keys=[patient_id], back_populates="patient_appointments")
-    physio = db.relationship("PhysioProfile", back_populates="appointments")
+    appointment_date = db.Column(db.Date, nullable=False)
+    appointment_time = db.Column(db.Time, nullable=False)
+    duration_minutes = db.Column(db.Integer, default=30, nullable=False)
+
+    status = db.Column(
+        db.String(20),
+        default="Pending",
+        nullable=False,
+    )
+
+    patient_note = db.Column(db.Text)
+    physio_note = db.Column(db.Text)
+
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow,
+        nullable=False,
+    )
+
+    updated_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow,
+        nullable=False,
+    )
+
+    patient = db.relationship(
+        "User",
+        foreign_keys=[patient_id],
+        back_populates="patient_appointments",
+    )
+
+    physio = db.relationship(
+        "PhysioProfile",
+        back_populates="appointments",
+    )
+
+    def __repr__(self):
+        return (
+            f"<Appointment "
+            f"{self.appointment_date} "
+            f"{self.appointment_time}>"
+        )
 
 
 __all__ = ["User", "OTPVerification", "PhysioProfile", "Appointment"]
