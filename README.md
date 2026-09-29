@@ -11,7 +11,7 @@ A Flask-based healthcare platform for booking physiotherapy appointments with ph
 
 ## Tech Stack
 - Flask
-- SQLite
+- PostgresSQL
 - Bootstrap 5
 - Twilio (SMS)
 - HTML/CSS/JavaScript
