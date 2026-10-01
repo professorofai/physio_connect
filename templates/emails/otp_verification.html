@@ -23,7 +23,7 @@
             {{ otp_code }}
         </div>
         <div style="font-size: 12px; color: #64748b; margin-top: 12px;">
-            Valid for 10 minutes
+            Valid for {{ expiration_label }}
         </div>
     </div>
 
@@ -80,7 +80,7 @@
 
     <!-- Expiration Notice -->
     <p style="color: #94a3b8; font-size: 12px; margin: 16px 0 0 0; border-top: 1px solid #e2e8f0; padding-top: 16px;">
-        This code will expire in 10 minutes for security reasons.<br>
+        This code will expire in {{ expiration_label }} for security reasons.<br>
         If you didn't request this verification, please ignore this email.
     </p>
 </div>

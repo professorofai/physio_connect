@@ -1,10 +1,5 @@
 // Custom JavaScript for Physio Connect - Interactive Frontend
 
-// Load Bootstrap JS and dependencies
-document.write('<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>');
-document.write('<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>');
-document.write('<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>');
-
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize tooltips
@@ -111,38 +106,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Add loading animation for page transitions
-    const links = document.querySelectorAll('a:not([target="_blank"])');
-    links.forEach(link => {
-        link.addEventListener('click', function(e) {
-            if (!e.ctrlKey && !e.metaKey) {
-                // Add loading overlay
-                const overlay = document.createElement('div');
-                overlay.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(255,255,255,0.8);
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    z-index: 9999;
-                `;
-                overlay.innerHTML = `
-                    <div class="text-center">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                        <p class="mt-2 text-primary">Loading...</p>
-                    </div>
-                `;
-                document.body.appendChild(overlay);
-            }
-        });
-    });
-
     // Add key shortcuts
     document.addEventListener('keydown', function(e) {
         // Ctrl/Cmd + Enter to submit forms
@@ -168,18 +131,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Add success/error message animations
-    const alerts = document.querySelectorAll('.alert');
-    alerts.forEach(alert => {
-        alert.classList.add('fade-in');
-        // Auto-dismiss success alerts after 5 seconds
-        if (alert.classList.contains('alert-success')) {
-            setTimeout(() => {
-                alert.style.transition = 'opacity 0.5s ease';
-                alert.style.opacity = '0';
-                setTimeout(() => alert.remove(), 500);
-            }, 5000);
-        }
+    // Auto-dismiss flash messages after a short reading period.
+    const flashMessages = document.querySelectorAll('.flash-message');
+    flashMessages.forEach(flashMessage => {
+        setTimeout(() => {
+            flashMessage.classList.add('is-dismissing');
+            setTimeout(() => flashMessage.remove(), 450);
+        }, 4500);
     });
 
     // Add pulse animation to call-to-action buttons
@@ -227,7 +185,16 @@ function showToast(message, type = 'info') {
 }
 
 // Add shake animation keyframes via JS (fallback)
-if (!document.styleSheets[0].cssRules.some(rule => rule.name === 'shake')) {
+const firstStyleSheet = document.styleSheets[0];
+let hasShakeAnimation = false;
+try {
+    hasShakeAnimation = firstStyleSheet && Array.from(firstStyleSheet.cssRules)
+        .some(rule => rule.name === 'shake');
+} catch (error) {
+    hasShakeAnimation = false;
+}
+
+if (!hasShakeAnimation) {
     const style = document.createElement('style');
     style.textContent = `
         @keyframes shake {

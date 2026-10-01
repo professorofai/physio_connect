@@ -16,45 +16,20 @@
                     <div class="card-body">
                         <div class="row align-items-center gy-4">
                             <div class="col-md-4 text-center">
-                                <img src="{{ url_for('static', filename='images/Physio.png') }}" alt="Physio Connect" width="130" height="130" class="form-card-logo mb-3">
-                                <p class="text-secondary mb-0">Fast registration for patients and physiotherapists with secure OTP verification.</p>
+                                <img src="{{ url_for('static', filename='images/Physio.png') }}"
+                                     alt="Physio Connect" width="110" height="110" class="register-form-logo">
                             </div>
                             <div class="col-md-8">
                                 <form method="POST" novalidate>
                                     <input type="hidden" name="step" value="1">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label for="name" class="form-label">
-                                                <i class="fas fa-user me-1"></i>Full Name
-                                            </label>
-                                            <input type="text" class="form-control" id="name" name="name" required
-                                                   placeholder="Enter your full name" data-bs-toggle="tooltip" title="Enter your complete name">
-                                            <div class="invalid-feedback">
-                                                Please provide your full name.
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label for="city" class="form-label">
-                                                <i class="fas fa-city me-1"></i>City
-                                            </label>
-                                            <input type="text" class="form-control" id="city" name="city" required
-                                                   placeholder="Enter your city" data-bs-toggle="tooltip" title="Enter the city where you live">
-                                            <div class="invalid-feedback">
-                                                Please provide your city.
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="mb-3">
-                                        <label for="phone_number" class="form-label">
-                                            <i class="fas fa-mobile-alt me-1"></i>Phone Number
+                                        <label for="name" class="form-label">
+                                            <i class="fas fa-user me-1"></i>Full Name
                                         </label>
-                                        <input type="tel" class="form-control" id="phone_number" name="phone_number" required
-                                               placeholder="+1234567890" pattern="^\+[1-9]\d{1,14}$" data-bs-toggle="tooltip" title="Enter your phone number with country code (e.g., +1234567890)">
-                                        <div class="form-text">
-                                            Include country code (e.g., +1 for US, +91 for India)
-                                        </div>
+                                        <input type="text" class="form-control" id="name" name="name" required
+                                               placeholder="Enter your full name" data-bs-toggle="tooltip" title="Enter your complete name">
                                         <div class="invalid-feedback">
-                                            Please provide a valid phone number with country code.
+                                            Please provide your full name.
                                         </div>
                                     </div>
                                     <div class="mb-3">
@@ -67,7 +42,7 @@
                                             Please provide a valid email address.
                                         </div>
                                     </div>
-                                    <div class="mb-3">
+                                    <div class="mb-4">
                                         <label for="password" class="form-label">
                                             <i class="fas fa-lock me-1"></i>Password
                                         </label>
@@ -77,22 +52,12 @@
                                             Password must be at least 6 characters long.
                                         </div>
                                     </div>
-                                    <div class="mb-4">
-                                        <label for="role" class="form-label">
-                                            <i class="fas fa-user-tag me-1"></i>I am a
-                                        </label>
-                                        <select class="form-select" id="role" name="role" required data-bs-toggle="tooltip" title="Select your role in the platform">
-                                            <option value="">Choose your role</option>
-                                            <option value="patient">Patient - Looking for physiotherapy services</option>
-                                            <option value="physiotherapist">Physiotherapist - Providing care services</option>
-                                        </select>
-                                        <div class="invalid-feedback">
-                                            Please select your role.
-                                        </div>
-                                    </div>
-                                    <div class="d-grid">
-                                        <button type="submit" class="btn btn-success btn-lg">
-                                            <i class="fas fa-envelope me-2"></i>Send Verification Code
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-success btn-lg" name="role" value="patient">
+                                            <i class="fas fa-envelope me-2"></i>Register as a patient
+                                        </button>
+                                        <button type="submit" class="btn btn-success" name="role" value="physiotherapist">
+                                            <i class="fas fa-user-md me-2"></i>Register yourself as a doctor
                                         </button>
                                     </div>
                                 </form>
@@ -109,4 +74,5 @@
         </div>
     </div>
 </div>
+
 {% endblock %}

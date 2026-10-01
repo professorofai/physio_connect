@@ -1,8 +1,9 @@
 import os
 import time
-from datetime import datetime
+from datetime import date, datetime
 
-from flask import Blueprint, current_app, flash, redirect, render_template, request, session
+from flask import Blueprint, abort, current_app, flash, redirect, render_template, request, session
+from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
@@ -14,22 +15,74 @@ patient_bp = Blueprint("patient", __name__)
 
 
 @patient_bp.route("/dashboard", endpoint="dashboard")
-def dashboard():
-    if "user_email" not in session:
+@patient_bp.route("/dashboard/<int:user_id>", endpoint="personal_dashboard")
+def dashboard(user_id=None):
+    if "user_id" not in session:
         return redirect("/login")
 
-    if session["user_role"] == "physiotherapist":
-        physio_profile = PhysioProfile.query.filter_by(user_id=session["user_id"]).first()
+    user = db.session.get(User, session["user_id"])
+    if not user:
+        session.clear()
+        return redirect("/login")
+
+    if user_id is None:
+        return redirect(f"/dashboard/{user.id}")
+    if user_id != user.id:
+        abort(403)
+
+    if user.role == "physiotherapist":
+        physio_profile = PhysioProfile.query.filter_by(user_id=user.id).first()
+        pending_appointments = []
+        upcoming_appointments = []
+        if physio_profile:
+            pending_appointments = (
+                Appointment.query.filter_by(
+                    physio_id=physio_profile.id,
+                    status="pending",
+                )
+                .order_by(Appointment.appointment_date, Appointment.appointment_time)
+                .limit(5)
+                .all()
+            )
+            upcoming_appointments = (
+                Appointment.query.filter_by(
+                    physio_id=physio_profile.id,
+                    status="approved",
+                )
+                .filter(Appointment.appointment_date >= date.today())
+                .order_by(Appointment.appointment_date, Appointment.appointment_time)
+                .limit(5)
+                .all()
+            )
         return render_template(
             "physio_dashboard.html",
-            email=session["user_email"],
+            email=user.email,
             physio_profile=physio_profile,
+            pending_appointments=pending_appointments,
+            upcoming_appointments=upcoming_appointments,
         )
 
-    elif session["user_role"] == "patient":
+    elif user.role == "patient":
+        upcoming_appointments = (
+            Appointment.query.filter_by(patient_id=user.id)
+            .filter(Appointment.appointment_date >= date.today())
+            .order_by(Appointment.appointment_date, Appointment.appointment_time)
+            .limit(3)
+            .all()
+        )
+        appointment_counts = {
+            status: Appointment.query.filter_by(
+                patient_id=user.id,
+                status=status,
+            ).count()
+            for status in ("pending", "approved", "rejected")
+        }
         return render_template(
             "patient_dashboard.html",
-            email=session["user_email"],
+            email=user.email,
+            user=user,
+            upcoming_appointments=upcoming_appointments,
+            appointment_counts=appointment_counts,
         )
 
     return redirect("/login")
@@ -37,8 +90,25 @@ def dashboard():
 
 @patient_bp.route("/physios", endpoint="physios")
 def physios():
-    physio_list = PhysioProfile.query.all()
+    physio_list = PhysioProfile.query.join(PhysioProfile.user).order_by(PhysioProfile.clinic_name).all()
     return render_template("physios.html", physios=physio_list)
+
+
+@patient_bp.route("/patient_appointments", endpoint="patient_appointments")
+def patient_appointments():
+    if "user_id" not in session:
+        return redirect("/login")
+
+    user = db.session.get(User, session["user_id"])
+    if not user or user.role != "patient":
+        abort(403)
+
+    appointments = (
+        Appointment.query.filter_by(patient_id=user.id)
+        .order_by(Appointment.appointment_date, Appointment.appointment_time)
+        .all()
+    )
+    return render_template("patient_appointments.html", appointments=appointments)
 
 
 @patient_bp.route("/profile/manage", methods=["GET", "POST"], endpoint="profile_management")
@@ -46,7 +116,7 @@ def profile_management():
     if "user_id" not in session:
         return redirect("/login")
 
-    user = User.query.get(session["user_id"])
+    user = db.session.get(User, session["user_id"])
     if not user:
         return redirect("/login")
 
@@ -69,8 +139,13 @@ def profile_management():
                 patient_form.profile_picture.data.save(os.path.join(upload_dir, filename))
                 user.profile_picture = filename
 
-            db.session.commit()
-            flash("Your profile was updated successfully.", "success")
+            try:
+                db.session.commit()
+            except SQLAlchemyError:
+                db.session.rollback()
+                flash("Unable to update your profile. Please try again.", "danger")
+            else:
+                flash("Your profile was updated successfully.", "success")
             return redirect("/profile/manage")
 
         if password_form.submit.data and password_form.validate_on_submit():
@@ -78,8 +153,13 @@ def profile_management():
                 flash("Current password is incorrect.", "danger")
             else:
                 user.password = generate_password_hash(password_form.new_password.data)
-                db.session.commit()
-                flash("Your password was changed successfully.", "success")
+                try:
+                    db.session.commit()
+                except SQLAlchemyError:
+                    db.session.rollback()
+                    flash("Unable to change your password. Please try again.", "danger")
+                else:
+                    flash("Your password was changed successfully.", "success")
             return redirect("/profile/manage")
 
         if physio_form.submit.data and physio_form.validate_on_submit() and user.role == "physiotherapist":
@@ -109,8 +189,13 @@ def profile_management():
                 existing = profile.certificates or ""
                 profile.certificates = f"{existing};{cert_filename}".strip(";") if existing else cert_filename
 
-            db.session.commit()
-            flash("Physiotherapist profile updated successfully.", "success")
+            try:
+                db.session.commit()
+            except SQLAlchemyError:
+                db.session.rollback()
+                flash("Unable to save your physiotherapist profile. Please try again.", "danger")
+            else:
+                flash("Physiotherapist profile updated successfully.", "success")
             return redirect("/profile/manage")
 
     return render_template(

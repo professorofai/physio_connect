@@ -1,8 +1,9 @@
 import random
 import string
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from flask import current_app
+from sqlalchemy.exc import SQLAlchemyError
 
 from app.extensions import db
 from app.models import OTPVerification
@@ -14,28 +15,53 @@ def generate_otp():
 
 def create_otp_verification(email):
     otp_code = generate_otp()
-    expires_at = datetime.utcnow() + timedelta(minutes=10)
+    expiration_seconds = current_app.config.get("OTP_EXPIRATION_SECONDS", 150)
+    expires_at = datetime.now(timezone.utc) + timedelta(seconds=expiration_seconds)
 
-    OTPVerification.query.filter_by(email=email, is_used=False).delete()
-    db.session.commit()
-
-    otp_verification = OTPVerification(email=email, otp_code=otp_code, expires_at=expires_at)
-    db.session.add(otp_verification)
-    db.session.commit()
+    try:
+        OTPVerification.query.filter_by(email=email, is_used=False).delete(
+            synchronize_session=False
+        )
+        db.session.add(
+            OTPVerification(email=email, otp_code=otp_code, expires_at=expires_at)
+        )
+        db.session.commit()
+    except SQLAlchemyError:
+        db.session.rollback()
+        raise
 
     print(f"[OTP DEBUG]: {otp_code}")
     return otp_code
 
 
-def verify_otp(email, otp_code):
-    otp_verification = OTPVerification.query.filter_by(email=email, otp_code=otp_code, is_used=False).first()
+def verify_otp(email, otp_code, commit=True):
+    try:
+        otp_verification = (
+            OTPVerification.query.filter_by(
+                email=email,
+                otp_code=otp_code,
+                is_used=False,
+            )
+            .with_for_update()
+            .first()
+        )
 
-    if not otp_verification:
-        return False
+        if not otp_verification:
+            return False
 
-    if datetime.utcnow() > otp_verification.expires_at:
-        return False
+        expires_at = otp_verification.expires_at
+        if expires_at.tzinfo is None:
+            expires_at = expires_at.replace(tzinfo=timezone.utc)
 
-    otp_verification.is_used = True
-    db.session.commit()
-    return True
+        if datetime.now(timezone.utc) >= expires_at:
+            return False
+
+        otp_verification.is_used = True
+        if commit:
+            db.session.commit()
+        else:
+            db.session.flush()
+        return True
+    except SQLAlchemyError:
+        db.session.rollback()
+        raise

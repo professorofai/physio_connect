@@ -1,54 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
-<h2 class="mb-4">Physiotherapist Dashboard 🏥</h2>
-
-<div class="card p-4 shadow">
-
-{% if physio_profile %}
-<div class="text-center mb-3">
-    {% if physio_profile.profile_picture %}
-    <img src="{{ url_for('static', filename='uploads/' + physio_profile.profile_picture) }}" 
-         alt="Profile Picture" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
-    {% else %}
-    <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center" 
-         style="width: 150px; height: 150px;">
-        <span class="text-white fs-1">👨‍⚕️</span>
-    </div>
-    {% endif %}
-</div>
-
-<h5 class="text-center">{{ physio_profile.clinic_name }}</h5>
-<p class="text-center text-muted">{{ physio_profile.location }} | {{ physio_profile.specialization }}</p>
-{% endif %}
-
-<h5>Welcome {{ email }}</h5>
-
-<hr>
-
-<div class="list-group">
-
-<a href="/create_profile" class="list-group-item list-group-item-action">
-Create / Update Clinic Profile
-</a>
-
-<a href="/physio_appointments" class="btn btn-primary">
-View Appointments
-</a>
-
-<a href="#" class="list-group-item list-group-item-action">
-View Patients
-</a>
-
-</div>
-
-<br>
-
-<a href="/profile/manage" class="btn btn-outline-primary">Manage Profile</a>
-<a href="/logout" class="btn btn-danger">Logout</a>
-
-</div>
-
-</div>
+<main class="physio-dashboard-content">
+	<section class="profile-completion-box">
+		<div>
+			<p class="dashboard-kicker">PROFILE SETUP</p>
+			<h1>{{ 'Update your clinic profile' if physio_profile else 'Complete your profile' }}</h1>
+			<p>{{ 'Keep your clinic information current so patients can find you.' if physio_profile else 'Add your clinic details so patients can discover and book your services.' }}</p>
+		</div>
+		<a href="/profile/manage" class="btn btn-success">{{ 'Edit profile' if physio_profile else 'Complete profile' }}</a>
+	</section>
+</main>
+{% endblock %}
 {% endblock %}

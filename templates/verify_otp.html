@@ -36,8 +36,12 @@
                             </div>
                         </div>
 
+                        <p id="otp-status" class="text-center text-muted" aria-live="polite">
+                            Code expires in <strong id="otp-countdown">2:30</strong>
+                        </p>
+
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-info btn-lg">
+                            <button type="submit" class="btn btn-info btn-lg" id="verify-button">
                                 <i class="fas fa-check me-1"></i>Verify Code
                             </button>
                         </div>
@@ -46,7 +50,7 @@
                     <div class="text-center mt-3">
                         <small class="text-muted">
                             Didn't receive the code?
-                            <a href="#" onclick="resendOTP()" class="text-info fw-bold" id="resend-link">
+                            <a href="#" onclick="resendOTP(event)" class="text-info fw-bold" id="resend-link">
                                 <i class="fas fa-redo me-1"></i>Resend
                             </a>
                         </small>
@@ -63,6 +67,58 @@
 </div>
 
 <script>
+const otpStatus = document.getElementById('otp-status');
+const otpCountdown = document.getElementById('otp-countdown');
+const verifyButton = document.getElementById('verify-button');
+const resendLink = document.getElementById('resend-link');
+const otpForm = document.querySelector('form');
+let countdownTimer;
+let otpSubmitting = false;
+
+otpForm.addEventListener('submit', function(event) {
+    if (otpSubmitting) {
+        event.preventDefault();
+        return;
+    }
+
+    otpSubmitting = true;
+    verifyButton.disabled = true;
+});
+
+function expireOTP() {
+    clearInterval(countdownTimer);
+    otpStatus.classList.remove('text-muted');
+    otpStatus.classList.add('text-danger');
+    otpStatus.innerHTML = '<strong>OTP expired.</strong> Resend code.';
+    verifyButton.disabled = true;
+    resendLink.innerHTML = '<i class="fas fa-redo me-1"></i>Resend code';
+}
+
+function startOtpCountdown(seconds) {
+    clearInterval(countdownTimer);
+    let remaining = Math.max(0, Number(seconds) || 0);
+
+    const updateCountdown = () => {
+        if (remaining <= 0) {
+            expireOTP();
+            return;
+        }
+
+        const minutes = Math.floor(remaining / 60);
+        const secondsPart = String(remaining % 60).padStart(2, '0');
+        otpStatus.classList.remove('text-danger');
+        otpStatus.classList.add('text-muted');
+        otpStatus.innerHTML = `Code expires in <strong id="otp-countdown">${minutes}:${secondsPart}</strong>`;
+        verifyButton.disabled = false;
+        remaining -= 1;
+    };
+
+    updateCountdown();
+    countdownTimer = setInterval(updateCountdown, 1000);
+}
+
+startOtpCountdown({{ otp_remaining_seconds|default(150) }});
+
 // Auto-focus on OTP input
 document.getElementById('otp_code').focus();
 
@@ -72,26 +128,37 @@ document.getElementById('otp_code').addEventListener('input', function(e) {
     e.target.value = value;
 
     if (value.length === 6) {
-        // Auto-submit the form
         setTimeout(() => {
-            e.target.form.submit();
+            if (!otpSubmitting) {
+                otpForm.requestSubmit();
+            }
         }, 500);
     }
 });
 
-function resendOTP() {
+function resendOTP(event) {
+    event.preventDefault();
     const link = document.getElementById('resend-link');
     const originalText = link.innerHTML;
     link.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Resending...';
     link.style.pointerEvents = 'none';
 
-    // Here you would make an AJAX call to resend OTP
-    // For now, just show a message
-    setTimeout(() => {
-        alert('Verification code resent to your phone.');
+    fetch('/resend-otp', { method: 'POST' })
+        .then(response => response.json().then(data => ({ ok: response.ok, data })))
+        .then(result => {
+            alert(result.data.message);
+            if (result.ok) {
+                startOtpCountdown(result.data.expires_in);
+                link.innerHTML = '<i class="fas fa-redo me-1"></i>Resend';
+            }
+        })
+        .catch(() => {
+            alert('Unable to resend the verification code.');
+        })
+        .finally(() => {
         link.innerHTML = originalText;
         link.style.pointerEvents = 'auto';
-    }, 2000);
+        });
 }
 
 // Add visual feedback for OTP input
